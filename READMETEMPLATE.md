@@ -2,8 +2,8 @@
 [forumurl]: https://forum.linuxserver.io
 [ircurl]: https://www.linuxserver.io/irc/
 [appurl]: www.example.com
-[dockerfileurl]: https://github.com/linuxserver/docker-<container-name>/blob/master/Dockerfile
-[hub]: https://hub.docker.com/r/<image-name>/
+[dockerfileurl]: https://github.com/linuxserver/docker-ldap-auth/blob/master/Dockerfile
+[hub]: https://hub.docker.com/r/ldap-auth/
 
 
 
@@ -29,13 +29,12 @@ The [LinuxServer.io][linuxserverurl] team brings you another image release featu
  + weekly base OS updates with common layers across the entire LinuxServer.io ecosystem to minimise space usage, down time and bandwidth
  + security updates
 
-# <image-name>
+# linuxserver/ldap-auth
 
 [![Dockerfile-link](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/Dockerfile-Link-green.png)][dockerfileurl]
 
-Provide a short, concise description of the application. No more than two SHORT paragraphs. Link to sources where possible and include an image illustrating your point if necessary. Point users to the original applications website, as that's the best place to get support - not here.
+The ldap-auth software is for authenticating users who request protected resources from servers proxied by nginx. It includes a daemon (ldap-auth) that communicates with an authentication server, and a webserver daemon that generates an authentication cookie based on the user’s credentials. The daemons are written in Python for use with a Lightweight Directory Access Protocol (LDAP) authentication server (OpenLDAP or Microsoft Windows Active Directory 2003 and 2012).
 
-`IMPORTANT, replace all instances of <image-name> with the correct dockerhub repo (ie linuxserver/plex) and <container-name> information (ie, plex) and make sure to update the block at the top of this file containing app specific urls, dockerhub url and dockerfile url etc.`
 
 &nbsp;
 
@@ -43,11 +42,10 @@ Provide a short, concise description of the application. No more than two SHORT 
 
 ```
 docker create \
-  --name=<container-name> \
-  -v <path to data>:/config \
-  -e PGID=<gid> -e PUID=<uid>  \
-  -p 1234:1234 \
-  <image-name>
+  --name=ldap-auth \
+  -p 8888:8888 \
+  -p 9000:9000 \
+  linuxserver/ldap-auth
 ```
 
 &nbsp;
@@ -59,35 +57,20 @@ For example with a port -p external:internal - what this shows is the port mappi
 So -p 8080:80 would expose port 80 from inside the container to be accessible from the host's IP on port 8080
 http://192.168.x.x:8080 would show you what's running INSIDE the container on port 80.
 
+NOTE: This container does not save any data that should be persistent and therefore there is no mapping for a `/config` folder.
 
 
 | Parameter | Function |
 | :---: | --- |
-| `-p 1234` | the port(s) |
-| `-v /config` | explain what lives here |
-| `-e PGID` | for GroupID, see below for explanation |
-| `-e PUID` | for UserID, see below for explanation |
+| `-p 8888` | the port for ldap auth daemon |
+| `-p 9000` | the port for ldap login page |
 
-&nbsp;
-
-## User / Group Identifiers
-
-Sometimes when using volumes (`-v` flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user `PUID` and group `PGID`.
-
-Ensure any volume directories on the host are owned by the same user you specify and it will "just work" &trade;.
-
-In this instance `PUID=1001` and `PGID=1001`, to find yours use `id user` as below:
-
-```
-  $ id <dockeruser>
-    uid=1001(dockeruser) gid=1001(dockergroup) groups=1001(dockergroup)
-```
 
 &nbsp;
 
 ## Setting up the application
 
-Insert a basic user guide here to get a n00b up and running with the software inside the container. DELETE ME
+This container itself does not have any settings and it relies on the pertinent information passed in the form of http headers in incoming requests. Make sure that your webserver is set up with the right config. Here's a sample config: https://github.com/nginxinc/nginx-ldap-auth/blob/master/nginx-ldap-auth.conf
 
 
 &nbsp;
@@ -96,10 +79,10 @@ Insert a basic user guide here to get a n00b up and running with the software in
 
 | Function | Command |
 | :--- | :--- |
-| Shell access (live container) | `docker exec -it <container-name> /bin/bash` |
-| Realtime container logs | `docker logs -f <container-name>` |
-| Container version | `docker inspect -f '{{ index .Config.Labels "build_version" }}' <container-name>` |
-| Image version |  `docker inspect -f '{{ index .Config.Labels "build_version" }}' <image-name>` |
+| Shell access (live container) | `docker exec -it ldap-auth /bin/bash` |
+| Realtime container logs | `docker logs -f ldap-auth` |
+| Container version | `docker inspect -f '{{ index .Config.Labels "build_version" }}' ldap-auth` |
+| Image version |  `docker inspect -f '{{ index .Config.Labels "build_version" }}' linuxserver/ldap-auth` |
 | Dockerfile | [Dockerfile][dockerfileurl] |
 
 &nbsp;
