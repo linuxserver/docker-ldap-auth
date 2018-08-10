@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+
+exec s6-setuidgid python /app/nginx-ldap-auth-daemon.py
