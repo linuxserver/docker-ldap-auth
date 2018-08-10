@@ -10,7 +10,7 @@ import sys, os, signal, base64, ldap, Cookie, argparse
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from cryptography.fernet import Fernet
 
-Listen = ('localhost', 8888)
+#Listen = ('localhost', 8888)
 #Listen = "/tmp/auth.sock"    # Also uncomment lines in 'Requests are
                               # processed with UNIX sockets' section below
 

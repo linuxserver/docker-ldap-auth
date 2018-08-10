@@ -8,6 +8,8 @@ LABEL maintainer="aptalca"
 
 # install packages
 RUN \
+ apk add --no-cache \
+	libldap && \
  apk add --no-cache --virtual=build-dependencies \
 	build-base \
 	openldap-dev \
