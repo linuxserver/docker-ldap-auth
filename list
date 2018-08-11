@@ -1,4 +1,0 @@
-	libffi \
-	libldap \
-	python2 \
-	py2-pip && \
