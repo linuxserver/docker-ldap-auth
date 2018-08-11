@@ -17,10 +17,10 @@ RUN \
  apk add --no-cache \
 	libffi \
 	libldap \
-	py2-pip && \
+	py2-pip \
+	python2 && \
  pip install -U --no-cache-dir \
 	cryptography \
-	python2 \
 	python-ldap && \
  echo "**** cleanup ****" && \
  apk del --purge \
