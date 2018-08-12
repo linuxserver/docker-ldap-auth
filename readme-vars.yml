@@ -16,7 +16,7 @@ available_architectures:
 # container parameters
 param_container_name: "{{ project_name }}"
 param_usage_include_vols: false
-param_volumes:
+param_volumes: ""
 param_usage_include_ports: true
 param_ports:
   - { external_port: "8888", internal_port: "8888", port_desc: "the port for ldap auth daemon" }
