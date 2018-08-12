@@ -26,8 +26,7 @@ param_ports:
 app_setup_block_enabled: true
 app_setup_block: |
   - This container itself does not have any settings and it relies on the pertinent information passed through in http headers of incoming requests. Make sure that your webserver is set up with the right config.
-  - Here's a sample config: [nginx-ldap-auth.conf](https://github.com/nginxinc/nginx-ldap-auth/blob/master/nginx-ldap-auth.conf)
-  - Wait 10 minutes.
+  - Here's a sample config: [nginx-ldap-auth.conf](https://github.com/nginxinc/nginx-ldap-auth/blob/master/nginx-ldap-auth.conf).
 
 # changelog
 changelogs:
