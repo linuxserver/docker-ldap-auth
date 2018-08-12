@@ -1,0 +1,34 @@
+---
+
+# project information
+project_name: ldap-auth
+project_url: "https://github.com/nginxinc/nginx-ldap-auth"
+project_logo: "https://jumpcloud.com/wp-content/uploads/2016/12/LDAP_Logo-1420591101.jpg"
+project_blurb: "[{{ project_name|capitalize }}]({{ project_url }}) software is for authenticating users who request protected resources from servers proxied by nginx. It includes a daemon (ldap-auth) that communicates with an authentication server, and a webserver daemon that generates an authentication cookie based on the user’s credentials. The daemons are written in Python for use with a Lightweight Directory Access Protocol (LDAP) authentication server (OpenLDAP or Microsoft Windows Active Directory 2003 and 2012)."
+project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_name }}"
+
+# supported architectures
+available_architectures:
+  - { arch: "{{ arch_x86_64 }}", tag: "tbc"}
+  - { arch: "{{ arch_arm64 }}", tag: "tbc"}
+  - { arch: "{{ arch_armhf }}", tag: "tbc"}
+
+# container parameters
+param_container_name: "{{ project_name }}"
+param_usage_include_vols: false
+param_volumes:
+param_usage_include_ports: true
+param_ports:
+  - { external_port: "8888", internal_port: "8888", port_desc: "the port for ldap auth daemon" }
+  - { external_port: "9000", internal_port: "9000", port_desc: "the port for ldap login page" }
+
+# application setup block
+app_setup_block_enabled: true
+app_setup_block: |
+  - This container itself does not have any settings and it relies on the pertinent information passed through in http headers of incoming requests. Make sure that your webserver is set up with the right config.
+  - Here's a sample config: [nginx-ldap-auth.conf](https://github.com/nginxinc/nginx-ldap-auth/blob/master/nginx-ldap-auth.conf)
+  - Wait 10 minutes.
+
+# changelog
+changelogs:
+  - { date: "11.08.18:", desc: "Initial release." }
