@@ -82,7 +82,7 @@ class AppHandler(BaseHTTPRequestHandler):
                     <!-- <p>
                         <input type="text" name="token" placeholder="2FA Token" aria-label="2FA Token" />
                     </p> -->
-                    <input type="hidden" name="target" value="/">
+                    <input type="hidden" name="target" value="TARGET">
                     <button type="submit" class="submit btn btn-primary">Log In</button>
                 </form>
             </div>
