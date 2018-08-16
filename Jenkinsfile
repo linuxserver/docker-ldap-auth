@@ -10,7 +10,6 @@ pipeline {
     BUILD_VERSION_ARG = 'LDAP_VERSION'
     LS_USER = 'linuxserver'
     LS_REPO = 'docker-ldap-auth'
-    CONTAINER_NAME = 'ldap-auth'
     DOCKERHUB_IMAGE = 'linuxserver/ldap-auth'
     DEV_DOCKERHUB_IMAGE = 'lsiodev/ldap-auth'
     PR_DOCKERHUB_IMAGE = 'lspipepr/ldap-auth'
@@ -91,12 +90,14 @@ pipeline {
     /* ########################
        External Release Tagging
        ######################## */
-    // If this is an os release set release type to none to indicate no external release
-    stage("Set ENV os"){
+    // If this is a pip version change set the external release verison and link
+    stage("Set ENV pip_version"){
       steps{
         script{
-          env.EXT_RELEASE = env.PACKAGE_TAG
-          env.RELEASE_LINK = 'none'
+          env.EXT_RELEASE = sh(
+            script: '''curl -sL  https://pypi.python.org/pypi/${EXT_PIP}/json |jq -r '. | .info.version' ''',
+            returnStdout: true).trim()
+          env.RELEASE_LINK = 'https://pypi.python.org/pypi/' + env.EXT_PIP
         }
       }
     }
@@ -179,7 +180,7 @@ pipeline {
        when {
          environment name: 'MULTIARCH', value: 'true'
        }
-       stages {
+       parallel {
          stage('Build X86') {
            steps {
              sh "docker build --no-cache -t ${IMAGE}:amd64-${META_TAG} \
@@ -203,7 +204,7 @@ pipeline {
                sh '''#! /bin/bash
                   echo $DOCKERPASS | docker login -u $DOCKERUSER --password-stdin
                   '''
-               sh "wget https://lsio-ci.ams3.digitaloceanspaces.com/qemu-arm-static"
+               sh "curl https://lsio-ci.ams3.digitaloceanspaces.com/qemu-arm-static -o qemu-arm-static"
                sh "chmod +x qemu-*"
                sh "docker build --no-cache -f Dockerfile.armhf -t ${IMAGE}:arm32v6-${META_TAG} \
                             --build-arg ${BUILD_VERSION_ARG}=${EXT_RELEASE} --build-arg VERSION=\"${META_TAG}\" --build-arg BUILD_DATE=${GITHUB_DATE} ."
@@ -229,7 +230,7 @@ pipeline {
                sh '''#! /bin/bash
                   echo $DOCKERPASS | docker login -u $DOCKERUSER --password-stdin
                   '''
-               sh "wget https://lsio-ci.ams3.digitaloceanspaces.com/qemu-aarch64-static"
+               sh "curl https://lsio-ci.ams3.digitaloceanspaces.com/qemu-aarch64-static -o qemu-aarch64-static"
                sh "chmod +x qemu-*"
                sh "docker build --no-cache -f Dockerfile.aarch64 -t ${IMAGE}:arm64v8-${META_TAG} \
                             --build-arg ${BUILD_VERSION_ARG}=${EXT_RELEASE} --build-arg VERSION=\"${META_TAG}\" --build-arg BUILD_DATE=${GITHUB_DATE} ."
@@ -378,34 +379,26 @@ pipeline {
              "tagger": {"name": "LinuxServer Jenkins","email": "jenkins@linuxserver.io","date": "'${GITHUB_DATE}'"}}' '''
         echo "Pushing New release for Tag"
         sh '''#! /bin/bash
-              echo "Updating base packages to ${PACKAGE_TAG}" > releasebody.json
+              echo "Updating PIP version of ${EXT_PIP} to ${EXT_RELEASE}" > releasebody.json
               echo '{"tag_name":"'${EXT_RELEASE}'-pkg-'${PACKAGE_TAG}'-ls'${LS_TAG_NUMBER}'",\
                      "target_commitish": "master",\
                      "name": "'${EXT_RELEASE}'-pkg-'${PACKAGE_TAG}'-ls'${LS_TAG_NUMBER}'",\
-                     "body": "**LinuxServer Changes:**\\n\\n'${LS_RELEASE_NOTES}'\\n**OS Changes:**\\n\\n' > start
+                     "body": "**LinuxServer Changes:**\\n\\n'${LS_RELEASE_NOTES}'\\n**PIP Changes:**\\n\\n' > start
               printf '","draft": false,"prerelease": false}' >> releasebody.json
               paste -d'\\0' start releasebody.json > releasebody.json.done
               curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST https://api.github.com/repos/${LS_USER}/${LS_REPO}/releases -d @releasebody.json.done'''
       }
     }
-    // Use helper containers to Render push the current README in master to the DockerHub Repo
-    stage('Sync-README') {
+    // Use helper container to render a readme from remote and commit if different
+    stage('Update-README') {
       when {
         branch "master"
-        expression {
-          env.LS_RELEASE != env.EXT_RELEASE + '-pkg-' + env.PACKAGE_TAG + '-ls' + env.LS_TAG_NUMBER
-        }
         environment name: 'CHANGE_ID', value: ''
+        expression {
+          env.CONTAINER_NAME != null
+        }
       }
       steps {
-        withCredentials([
-          [
-            $class: 'UsernamePasswordMultiBinding',
-            credentialsId: '3f9ba4d5-100d-45b0-a3c4-633fd6061207',
-            usernameVariable: 'DOCKERUSER',
-            passwordVariable: 'DOCKERPASS'
-          ]
-        ]) {
           sh '''#! /bin/bash
                 TEMPDIR=$(mktemp -d)
                 docker pull linuxserver/doc-builder:latest
@@ -418,7 +411,24 @@ pipeline {
                   git --git-dir ${TEMPDIR}/${LS_REPO}/.git commit -m 'Bot Updating README from template'
                   git --git-dir ${TEMPDIR}/${LS_REPO}/.git push https://LinuxServer-CI:${GITHUB_TOKEN}@github.com/${LS_USER}/${LS_REPO}.git --all
                 fi
-                rm -Rf ${TEMPDIR}
+                rm -Rf ${TEMPDIR}'''
+      }
+    }
+    // Use helper container to sync the current README on master to the dockerhub endpoint
+    stage('Sync-README') {
+      when {
+        environment name: 'CHANGE_ID', value: ''
+      }
+      steps {
+        withCredentials([
+          [
+            $class: 'UsernamePasswordMultiBinding',
+            credentialsId: '3f9ba4d5-100d-45b0-a3c4-633fd6061207',
+            usernameVariable: 'DOCKERUSER',
+            passwordVariable: 'DOCKERPASS'
+          ]
+        ]) {
+          sh '''#! /bin/bash
                 docker pull lsiodev/readme-sync
                 docker run --rm=true \
                   -e DOCKERHUB_USERNAME=$DOCKERUSER \

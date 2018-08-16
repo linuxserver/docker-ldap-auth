@@ -3,6 +3,7 @@ FROM lsiobase/alpine:3.8
 # set version label
 ARG BUILD_DATE
 ARG VERSION
+ARG LDAP_VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="aptalca"
 
@@ -19,9 +20,14 @@ RUN \
 	libldap \
 	py2-pip \
 	python2 && \
+ if [ -z ${LDAP_VERSION+x} ]; then \
+  LDAP_INSTALL="python-ldap"; \
+ else \
+  LDAP_INSTALL="python-ldap==${LDAP_VERSION}"; \
+ fi && \
  pip install -U --no-cache-dir \
 	cryptography \
-	python-ldap && \
+	${LDAP_INSTALL} && \
  echo "**** cleanup ****" && \
  apk del --purge \
 	build-dependencies && \
