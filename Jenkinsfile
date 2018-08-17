@@ -10,6 +10,7 @@ pipeline {
     BUILD_VERSION_ARG = 'LDAP_VERSION'
     LS_USER = 'linuxserver'
     LS_REPO = 'docker-ldap-auth'
+    CONTAINER_NAME = 'ldap-auth'
     DOCKERHUB_IMAGE = 'linuxserver/ldap-auth'
     DEV_DOCKERHUB_IMAGE = 'lsiodev/ldap-auth'
     PR_DOCKERHUB_IMAGE = 'lspipepr/ldap-auth'
@@ -159,6 +160,58 @@ pipeline {
           env.META_TAG = env.EXT_RELEASE + '-pkg-' + env.PACKAGE_TAG + '-pr-' + env.PULL_REQUEST
           env.CODE_URL = 'https://github.com/' + env.LS_USER + '/' + env.LS_REPO + '/pull/' + env.PULL_REQUEST
           env.DOCKERHUB_LINK = 'https://hub.docker.com/r/' + env.PR_DOCKERHUB_IMAGE + '/tags/'
+        }
+      }
+    }
+    // Use helper container to render a readme from the template if needed
+    stage('Update-README') {
+      when {
+        branch "master"
+        environment name: 'CHANGE_ID', value: ''
+        expression {
+          env.CONTAINER_NAME != null
+        }
+      }
+      steps {
+        sh '''#! /bin/bash
+              TEMPDIR=$(mktemp -d)
+              docker pull linuxserver/doc-builder:latest
+              docker run --rm -e CONTAINER_NAME=${CONTAINER_NAME} -v ${TEMPDIR}:/ansible/readme linuxserver/doc-builder:latest
+              if [ "$(md5sum ${TEMPDIR}/${CONTAINER_NAME}/README.md | awk '{ print $1 }')" != "$(md5sum README.md | awk '{ print $1 }')" ]; then
+                git clone https://github.com/${LS_USER}/${LS_REPO}.git ${TEMPDIR}/${LS_REPO}
+                cp ${TEMPDIR}/${CONTAINER_NAME}/README.md ${TEMPDIR}/${LS_REPO}/
+                cd ${TEMPDIR}/${LS_REPO}/
+                git --git-dir ${TEMPDIR}/${LS_REPO}/.git add README.md
+                git --git-dir ${TEMPDIR}/${LS_REPO}/.git commit -m 'Bot Updating README from template'
+                git --git-dir ${TEMPDIR}/${LS_REPO}/.git push https://LinuxServer-CI:${GITHUB_TOKEN}@github.com/${LS_USER}/${LS_REPO}.git --all
+                echo "true" > /tmp/${COMMIT_SHA}-${BUILD_NUMBER}
+              else
+                echo "false" > /tmp/${COMMIT_SHA}-${BUILD_NUMBER}
+              fi
+              rm -Rf ${TEMPDIR}'''
+        script{
+          env.README_UPDATED = sh(
+            script: '''cat /tmp/${COMMIT_SHA}-${BUILD_NUMBER}''',
+            returnStdout: true).trim()
+        }
+      }
+    }
+    // Exit the build if the Readme was just updated
+    stage('README-exit') {
+      when {
+        branch "master"
+        environment name: 'CHANGE_ID', value: ''
+        environment name: 'README_UPDATED', value: 'true'
+        expression {
+          env.CONTAINER_NAME != null
+        }
+      }
+      steps {
+        script{
+          env.CI_URL = 'README_UPDATE'
+          env.RELEASE_LINK = 'README_UPDATE'
+          currentBuild.rawBuild.result = Result.ABORTED
+          throw new hudson.AbortException('ABORTED_README')
         }
       }
     }
@@ -387,31 +440,6 @@ pipeline {
               printf '","draft": false,"prerelease": false}' >> releasebody.json
               paste -d'\\0' start releasebody.json > releasebody.json.done
               curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST https://api.github.com/repos/${LS_USER}/${LS_REPO}/releases -d @releasebody.json.done'''
-      }
-    }
-    // Use helper container to render a readme from remote and commit if different
-    stage('Update-README') {
-      when {
-        branch "master"
-        environment name: 'CHANGE_ID', value: ''
-        expression {
-          env.CONTAINER_NAME != null
-        }
-      }
-      steps {
-          sh '''#! /bin/bash
-                TEMPDIR=$(mktemp -d)
-                docker pull linuxserver/doc-builder:latest
-                docker run --rm -e CONTAINER_NAME=${CONTAINER_NAME} -v ${TEMPDIR}:/ansible/readme linuxserver/doc-builder:latest
-                if [ "$(md5sum ${TEMPDIR}/${CONTAINER_NAME}/README.md | awk '{ print $1 }')" != "$(md5sum README.md | awk '{ print $1 }')" ]; then
-                  git clone https://github.com/${LS_USER}/${LS_REPO}.git ${TEMPDIR}/${LS_REPO}
-                  cp ${TEMPDIR}/${CONTAINER_NAME}/README.md ${TEMPDIR}/${LS_REPO}/
-                  cd ${TEMPDIR}/${LS_REPO}/
-                  git --git-dir ${TEMPDIR}/${LS_REPO}/.git add README.md
-                  git --git-dir ${TEMPDIR}/${LS_REPO}/.git commit -m 'Bot Updating README from template'
-                  git --git-dir ${TEMPDIR}/${LS_REPO}/.git push https://LinuxServer-CI:${GITHUB_TOKEN}@github.com/${LS_USER}/${LS_REPO}.git --all
-                fi
-                rm -Rf ${TEMPDIR}'''
       }
     }
     // Use helper container to sync the current README on master to the dockerhub endpoint
