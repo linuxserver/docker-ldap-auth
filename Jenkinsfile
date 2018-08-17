@@ -128,7 +128,6 @@ pipeline {
       when {
         not {branch "master"}
         environment name: 'CHANGE_ID', value: ''
-        environment name: 'MULTIARCH', value: 'false'
       }
       steps {
         script{
