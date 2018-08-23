@@ -21,7 +21,7 @@ From August 2018 onwards, Linuxserver are in the midst of switching to a new CI 
 TLDR: Multi-arch support is changing from multiple repos to one repo per container image.
 
 # [linuxserver/ldap-auth](https://github.com/linuxserver/docker-ldap-auth)
-[![](https://images.microbadger.com/badges/version/linuxserver/ldap-auth.svg)](https://microbadger.com/images/linuxserverldap-auth "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/linuxserver/ldap-auth.svg)](https://microbadger.com/images/linuxserver/ldap-auth "Get your own version badge on microbadger.com")
 [![](https://images.microbadger.com/badges/image/linuxserver/ldap-auth.svg)](https://microbadger.com/images/linuxserver/ldap-auth "Get your own version badge on microbadger.com")
 ![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ldap-auth.svg)
 ![Docker Stars](https://img.shields.io/docker/stars/linuxserver/ldap-auth.svg)
