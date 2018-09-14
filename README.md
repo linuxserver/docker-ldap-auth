@@ -38,9 +38,9 @@ The architectures supported by this image are:
 
 | Architecture | Tag |
 | :----: | --- |
-| X86-64 | tbc |
-| arm64 | tbc |
-| armhf | tbc |
+| X86-64 | amd64-latest |
+| arm64 | arm64v8-latest |
+| armhf | arm32v6-latest |
 
 ## Usage
 
@@ -51,8 +51,7 @@ Here are some example snippets to help you get started creating a container.
 ```
 docker create \
   --name=ldap-auth \
-  -e PUID=1001 \
-  -e PGID=1001 \
+  -e TZ=Europe/London \
   -p 8888:8888 \
   -p 9000:9000 \
   linuxserver/ldap-auth
@@ -70,9 +69,7 @@ services:
   ldap-auth:
     image: linuxserver/ldap-auth
     container_name: ldap-auth
-    environment:
-      - PUID=1001
-      - PGID=1001
+      - TZ=Europe/London
     ports:
       - 8888:8888
       - 9000:9000
@@ -88,21 +85,8 @@ Container images are configured using parameters passed at runtime (such as thos
 | :----: | --- |
 | `-p 8888` | the port for ldap auth daemon |
 | `-p 9000` | the port for ldap login page |
-| `-e PUID=1001` | for UserID - see below for explanation |
-| `-e PGID=1001` | for GroupID - see below for explanation |
+| `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London |
 
-## User / Group Identifiers
-
-When using volumes (`-v` flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user `PUID` and group `PGID`.
-
-Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
-
-In this instance `PUID=1001` and `PGID=1001`, to find yours use `id user` as below:
-
-```
-  $ id username
-    uid=1001(dockeruser) gid=1001(dockergroup) groups=1001(dockergroup)
-```
 
 &nbsp;
 ## Application Setup
@@ -123,4 +107,5 @@ In this instance `PUID=1001` and `PGID=1001`, to find yours use `id user` as bel
 
 ## Versions
 
+* **14.09.18:** - Add TZ parameter, remove unnecessary PUID/PGID params
 * **11.08.18:** - Initial release.
