@@ -34,4 +34,5 @@ app_setup_block: |
 
 # changelog
 changelogs:
+  - { date: "14.09.18:", desc: "Add TZ parameter, remove unnecessary PUID/PGID params" }
   - { date: "11.08.18:", desc: "Initial release." }
