@@ -26,6 +26,8 @@ RUN \
   LDAP_INSTALL="python-ldap==${LDAP_VERSION}"; \
  fi && \
  pip install -U --no-cache-dir \
+ 	pip && \
+ pip install -U --no-cache-dir \
 	cryptography \
 	${LDAP_INSTALL} && \
  echo "**** cleanup ****" && \
