@@ -107,5 +107,6 @@ Container images are configured using parameters passed at runtime (such as thos
 
 ## Versions
 
+* **18.09.18:** - Update pip
 * **14.09.18:** - Add TZ parameter, remove unnecessary PUID/PGID params
 * **11.08.18:** - Initial release.
