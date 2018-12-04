@@ -1,0 +1,28 @@
+---
+
+# jenkins variables
+project_name: docker-ldap-auth
+external_type: pip_version
+release_type: stable
+release_tag: latest
+ls_branch: master
+repo_vars:
+  - EXT_RELEASE_TYPE = 'pip_version'
+  - EXT_PIP = 'python-ldap'
+  - BUILD_VERSION_ARG = 'LDAP_VERSION'
+  - LS_USER = 'linuxserver'
+  - LS_REPO = 'docker-ldap-auth'
+  - CONTAINER_NAME = 'ldap-auth'
+  - DOCKERHUB_IMAGE = 'linuxserver/ldap-auth'
+  - DEV_DOCKERHUB_IMAGE = 'lsiodev/ldap-auth'
+  - PR_DOCKERHUB_IMAGE = 'lspipepr/ldap-auth'
+  - DIST_IMAGE = 'alpine'
+  - MULTIARCH='true'
+  - CI='true'
+  - CI_WEB='false'
+  - CI_PORT=''
+  - CI_SSL=''
+  - CI_DELAY=''
+  - CI_DOCKERENV='TZ=US/Pacific'
+  - CI_AUTH=''
+  - CI_WEBPATH=''
