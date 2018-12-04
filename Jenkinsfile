@@ -102,7 +102,7 @@ pipeline {
       steps{
         script{
           env.EXT_RELEASE = sh(
-            script: '''curl -s  https://pypi.python.org/pypi/${EXT_PIP}/json |jq -r '. | .info.version' ''',
+            script: '''curl -sL  https://pypi.python.org/pypi/${EXT_PIP}/json |jq -r '. | .info.version' ''',
             returnStdout: true).trim()
           env.RELEASE_LINK = 'https://pypi.python.org/pypi/' + env.EXT_PIP
         }
