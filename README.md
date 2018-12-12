@@ -71,6 +71,7 @@ services:
   ldap-auth:
     image: linuxserver/ldap-auth
     container_name: ldap-auth
+    environment:
       - TZ=Europe/London
     ports:
       - 8888:8888
