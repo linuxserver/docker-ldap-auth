@@ -27,12 +27,12 @@ shadow shadow-4.5-r0
 tzdata tzdata-2018f-r0
 libffi libffi-3.2.1-r4
 db db-5.3.28-r0
-libsasl libsasl-2.1.26-r13
+libsasl libsasl-2.1.26-r14
 libldap libldap-2.4.46-r0
 libbz2 libbz2-1.0.6-r6
 expat expat-2.2.5-r0
 gdbm gdbm-1.13-r1
-sqlite-libs sqlite-libs-3.24.0-r0
+sqlite-libs sqlite-libs-3.25.3-r0
 python2 python2-2.7.15-r1
 py-setuptools py-setuptools-39.1.0-r0
 py2-pip py2-pip-10.0.1-r0
