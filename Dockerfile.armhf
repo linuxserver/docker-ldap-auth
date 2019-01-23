@@ -29,15 +29,16 @@ RUN \
   LDAP_INSTALL="python-ldap==${LDAP_VERSION}"; \
  fi && \
  pip install -U --no-cache-dir \
- 	pip && \
- pip install -U --no-cache-dir \
-	cryptography \
-	${LDAP_INSTALL} && \
+        pip && \
+ pip install -U \
+        cryptography \
+        ${LDAP_INSTALL} && \
  echo "**** cleanup ****" && \
  apk del --purge \
-	build-dependencies && \
+        build-dependencies && \
  rm -rf \
-	/tmp/*
+        /tmp/* \
+        /root/.cache/pip
 
 # copy local files
 COPY root/ /
