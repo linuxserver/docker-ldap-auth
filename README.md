@@ -134,6 +134,7 @@ Below are the instructions for updating containers:
 
 ## Versions
 
+* **22.02.19:** - Rebasing to alpine 3.9.
 * **18.09.18:** - Update pip
 * **14.09.18:** - Add TZ parameter, remove unnecessary PUID/PGID params
 * **11.08.18:** - Initial release.
