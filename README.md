@@ -75,7 +75,6 @@ services:
     ports:
       - 8888:8888
       - 9000:9000
-    mem_limit: 4096m
     restart: unless-stopped
 ```
 
@@ -121,9 +120,20 @@ Below are the instructions for updating containers:
 * Start the new container: `docker start ldap-auth`
 * You can also remove the old dangling images: `docker image prune`
 
+### Via Taisun auto-updater (especially useful if you don't remember the original parameters)
+* Pull the latest image at its tag and replace it with the same env variables in one shot:
+  ```
+  docker run --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock taisun/updater \
+  --oneshot ldap-auth
+  ```
+* You can also remove the old dangling images: `docker image prune`
+
 ### Via Docker Compose
-* Update the image: `docker-compose pull linuxserver/ldap-auth`
-* Let compose update containers as necessary: `docker-compose up -d`
+* Update all images: `docker-compose pull`
+  * or update a single image: `docker-compose pull ldap-auth`
+* Let compose update all containers as necessary: `docker-compose up -d`
+  * or update a single container: `docker-compose up -d ldap-auth`
 * You can also remove the old dangling images: `docker image prune`
 
 ## Versions
