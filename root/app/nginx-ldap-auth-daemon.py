@@ -9,6 +9,7 @@
 import sys, os, signal, base64, ldap, Cookie, argparse
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from cryptography.fernet import Fernet
+from cryptography.fernet import InvalidToken
 
 #Listen = ('localhost', 8888)
 #Listen = "/tmp/auth.sock"    # Also uncomment lines in 'Requests are
@@ -74,11 +75,16 @@ class AuthHandler(BaseHTTPRequestHandler):
 
         try:
             cipher_suite = Fernet('REPLACEWITHFERNETKEY')
+            self.log_message('Trying to dechipher credentials...')
             auth_decoded = cipher_suite.decrypt(auth_header[6:])
             user, passwd = auth_decoded.split(':', 1)
-
-        except:
+        except InvalidToken:
+            self.log_message('Incorrect token. Trying to decode credentials from BASE64...')
+            auth_decoded = base64.b64decode(auth_header[6:])
+            user, passwd = auth_decoded.split(':', 1)
+        except Exception as e:
             self.auth_failed(ctx)
+            self.log_error(e)
             return True
 
         ctx['user'] = user
@@ -245,8 +251,10 @@ class LDAPAuthHandler(AuthHandler):
             self.send_response(200)
             self.end_headers()
 
-        except:
+        except Exception as e:
             self.auth_failed(ctx)
+            self.log_error(str(e))
+            raise
 
 def exit_handler(signal, frame):
     global Listen
