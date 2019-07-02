@@ -157,6 +157,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **01.07.19:** - Fall back to base64 encoding when basic http auth is used.
 * **23.03.19:** - Switching to new Base images, shift to arm32v7 tag.
 * **22.02.19:** - Rebasing to alpine 3.9.
 * **18.09.18:** - Update pip

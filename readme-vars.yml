@@ -34,6 +34,7 @@ app_setup_block: |
 
 # changelog
 changelogs:
+  - { date: "01.07.19:", desc: "Fall back to base64 encoding when basic http auth is used." }
   - { date: "23.03.19:", desc: "Switching to new Base images, shift to arm32v7 tag." }
   - { date: "22.02.19:", desc: "Rebasing to alpine 3.9." }
   - { date: "18.09.18:", desc: "Update pip" }
