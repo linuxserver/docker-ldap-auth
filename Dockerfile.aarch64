@@ -13,19 +13,18 @@ RUN \
 	build-base \
 	libffi-dev \
 	openldap-dev \
-	python2-dev && \
+	python3-dev && \
  echo "**** install runtime packages ****" && \
  apk add --no-cache \
 	libffi \
 	libldap \
-	py2-pip \
-	python2 && \
+	python3 && \
  if [ -z ${LDAP_VERSION+x} ]; then \
   LDAP_INSTALL="python-ldap"; \
  else \
   LDAP_INSTALL="python-ldap==${LDAP_VERSION}"; \
  fi && \
- pip install -U --no-cache-dir \
+ pip3 install -U --no-cache-dir \
         pip && \
  pip install -U \
         cryptography \
