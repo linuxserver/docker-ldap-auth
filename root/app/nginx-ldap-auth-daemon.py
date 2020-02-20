@@ -87,7 +87,8 @@ class AuthHandler(BaseHTTPRequestHandler):
         try:
             cipher_suite = Fernet(REPLACEWITHFERNETKEY)
             self.log_message('Trying to dechipher credentials...')
-            auth_decoded = cipher_suite.decrypt(auth_header[6:])
+            auth_decoded = auth_header[6:].encode()
+            auth_decoded = cipher_suite.decrypt(auth_decoded)
             auth_decoded = auth_decoded.decode("utf-8")
             user, passwd = auth_decoded.split(':', 1)
         except InvalidToken:
