@@ -88,11 +88,12 @@ class AuthHandler(BaseHTTPRequestHandler):
             cipher_suite = Fernet(REPLACEWITHFERNETKEY)
             self.log_message('Trying to dechipher credentials...')
             auth_decoded = cipher_suite.decrypt(auth_header[6:])
+            auth_decoded = auth_decoded.decode("utf-8")
             user, passwd = auth_decoded.split(':', 1)
         except InvalidToken:
             self.log_message('Incorrect token. Trying to decode credentials from BASE64...')
             auth_decoded = base64.b64decode(auth_header[6:])
-            if sys.version_info.major == 3: auth_decoded = auth_decoded.decode("utf-8")
+            auth_decoded = auth_decoded.decode("utf-8")
             user, passwd = auth_decoded.split(':', 1)
         except Exception as e:
             self.auth_failed(ctx)
