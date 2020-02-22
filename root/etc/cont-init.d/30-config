@@ -1,7 +1,9 @@
 #!/usr/bin/with-contenv bash
 
 # generate fernet key for ldap if it doesn't exist
-[[ $(cat /app/ldap-backend-app.py | grep 'REPLACEWITHFERNETKEY') ]] && \
-	FERNETKEY=$(python /app/fernet-key.py) && \
-	sed -i "s/REPLACEWITHFERNETKEY/${FERNETKEY}/" /app/ldap-backend-app.py && \
-	sed -i "s/REPLACEWITHFERNETKEY/${FERNETKEY}/" /app/nginx-ldap-auth-daemon.py
+if grep -q 'REPLACEWITHFERNETKEY' /app/ldap-backend-app.py; then
+    FERNETKEY=$(python3 /app/fernet-key.py)
+    sed -i "s/REPLACEWITHFERNETKEY/${FERNETKEY}/" /app/ldap-backend-app.py
+    sed -i "s/REPLACEWITHFERNETKEY/${FERNETKEY}/" /app/nginx-ldap-auth-daemon.py
+    echo "generated fernet key"
+fi
