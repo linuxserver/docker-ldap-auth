@@ -101,7 +101,6 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-p 9000` | the port for ldap login page |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London |
 
-
 ## Environment variables from files (Docker secrets)
 
 You can set any environment variable from a file by using a special prepend `FILE__`. 
