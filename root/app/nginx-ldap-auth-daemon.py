@@ -214,6 +214,8 @@ class LDAPAuthHandler(AuthHandler):
                 self.log_message('LDAP baseDN is not set!')
                 return
 
+            ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
+            
             ctx['action'] = 'initializing LDAP connection'
             ldap_obj = ldap.initialize(ctx['url']);
 
