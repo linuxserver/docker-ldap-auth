@@ -34,6 +34,7 @@ app_setup_block: |
 
 # changelog
 changelogs:
+  - { date: "20.08.20:", desc: "Add support for self-signed CA certs." }
   - { date: "20.02.20:", desc: "Switch to python3." }
   - { date: "19.12.19:", desc: "Rebasing to alpine 3.11." }
   - { date: "01.07.19:", desc: "Fall back to base64 encoding when basic http auth is used." }
