@@ -31,9 +31,12 @@ app_setup_block_enabled: true
 app_setup_block: |
   - This container itself does not have any settings and it relies on the pertinent information passed through in http headers of incoming requests. Make sure that your webserver is set up with the right config.
   - Here's a sample config: [nginx-ldap-auth.conf](https://github.com/nginxinc/nginx-ldap-auth/blob/master/nginx-ldap-auth.conf).
+  - Unlike the upstream project, this image encodes the cookie information with fernet, using a randomly generated key during container creation.
+  - Also unlike the upstream project, this image serves the login page at `/ldaplogin` (as well as `/login`) to prevent clashes with reverse proxied apps that may also use `/login` for their internal auth.
 
 # changelog
 changelogs:
+  - { date: "02.06.20:", desc: "Rebasing to alpine 3.12, serve login page at `/ldaplogin` as well as `/login`, to prevent clashes with reverese proxied apps." }
   - { date: "17.05.20:", desc: "Add support for self-signed CA certs." }
   - { date: "20.02.20:", desc: "Switch to python3." }
   - { date: "19.12.19:", desc: "Rebasing to alpine 3.11." }
