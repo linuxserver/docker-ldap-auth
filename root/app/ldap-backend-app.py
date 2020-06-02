@@ -43,7 +43,7 @@ class AppHandler(BaseHTTPRequestHandler):
 
         url = urlparse(self.path)
 
-        if url.path.startswith("/login"):
+        if url.path.startswith("/login") or url.path.startswith("/ldaplogin"):
             return self.auth_form()
 
         self.send_response(200)
