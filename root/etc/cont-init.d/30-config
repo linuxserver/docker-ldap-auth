@@ -2,7 +2,11 @@
 
 # generate fernet key for ldap if it doesn't exist
 if grep -q 'REPLACEWITHFERNETKEY' /app/ldap-backend-app.py; then
-    if [[ -z "${FERNETKEY}" ]]; then
+    if [ -z "${FERNETKEY}" ]; then
+        KEY=$(python3 /app/fernet-key.py)
+        echo "generated fernet key"
+    elif [ $(openssl base64 -d <<< "${FERNETKEY}" | wc -c) != "32" ]; then
+        echo "FERNETKEY env var is not set to a base64 encoded 32-byte key"
         KEY=$(python3 /app/fernet-key.py)
         echo "generated fernet key"
     else
