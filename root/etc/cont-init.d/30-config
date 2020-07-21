@@ -5,7 +5,7 @@ if grep -q 'REPLACEWITHFERNETKEY' /app/ldap-backend-app.py; then
     if [ -z "${FERNETKEY}" ]; then
         KEY=$(python3 /app/fernet-key.py)
         echo "generated fernet key"
-    elif ! python3 -c "from cryptography.fernet import Fernet; Fernet(b'${FERNETKEY}').encrypt(b\"my deep dark secret\")" 2>/dev/null; then
+    elif ! python3 -c "from cryptography.fernet import Fernet; Fernet(b'${FERNETKEY}').encrypt(b'my deep dark secret')" 2>/dev/null; then
         echo "FERNETKEY env var is not set to a base64 encoded 32-byte key"
         KEY=$(python3 /app/fernet-key.py)
         echo "generated fernet key"
