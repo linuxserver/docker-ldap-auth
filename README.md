@@ -65,6 +65,8 @@ docker create \
   --name=ldap-auth \
   -e TZ=Europe/London \
   -e FERNETKEY= `#optional` \
+  -e CERTFILE= `#optional` \
+  -e KEYFILE= `#optional` \
   -p 8888:8888 \
   -p 9000:9000 \
   --restart unless-stopped \
@@ -86,6 +88,8 @@ services:
     environment:
       - TZ=Europe/London
       - FERNETKEY= #optional
+      - CERTFILE= #optional
+      - KEYFILE= #optional
     ports:
       - 8888:8888
       - 9000:9000
@@ -102,6 +106,8 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-p 9000` | the port for ldap login page |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London |
 | `-e FERNETKEY=` | Optionally define a custom fernet key, has to be base64-encoded 32-byte (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications) |
+| `-e CERTFILE=` | Point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon |
+| `-e KEYFILE=` | Point this to the private key file, matching the certificate file referred to in CERTFILE |
 
 ## Environment variables from files (Docker secrets)
 
@@ -200,6 +206,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **27.07.20:** - Add support for HTTP over SSL (HTTPS).
 * **21.07.20:** - Add support for optional user defined fernet key.
 * **02.06.20:** - Rebasing to alpine 3.12, serve login page at `/ldaplogin` as well as `/login`, to prevent clashes with reverese proxied apps.
 * **17.05.20:** - Add support for self-signed CA certs.
