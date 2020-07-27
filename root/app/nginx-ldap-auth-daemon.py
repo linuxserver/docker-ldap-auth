@@ -302,6 +302,9 @@ if __name__ == '__main__':
     group.add_argument('-s', '--starttls', metavar="starttls",
         default="false",
         help=("Establish a STARTTLS protected session (Default: false)"))
+    group.add_argument('--disable-referrals', metavar="disable_referrals",
+        default="false",
+        help=("Sets ldap.OPT_REFERRALS to zero (Default: false)"))
     group.add_argument('-b', metavar="baseDn", dest="basedn", default='',
         help="LDAP base dn (Default: unset)")
     group.add_argument('-D', metavar="bindDn", dest="binddn", default='',
@@ -333,6 +336,10 @@ if __name__ == '__main__':
     }
     LDAPAuthHandler.set_params(auth_params)
     server = AuthHTTPServer(Listen, LDAPAuthHandler)
+    if os.path.isfile(os.environ.get("CERTFILE")) and os.path.isfile(os.environ.get("KEYFILE")):
+        import ssl
+        server.socket = ssl.wrap_socket (server.socket, certfile=os.environ.get("CERTFILE"), keyfile=os.environ.get("KEYFILE"), server_side=True)
+        sys.stdout.write("SSL enabled using certificate file %s and key file %s\n" % (os.environ.get("CERTFILE"), os.environ.get("KEYFILE")))
     signal.signal(signal.SIGINT, exit_handler)
     signal.signal(signal.SIGTERM, exit_handler)
 
