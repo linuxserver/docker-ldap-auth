@@ -336,7 +336,7 @@ if __name__ == '__main__':
     }
     LDAPAuthHandler.set_params(auth_params)
     server = AuthHTTPServer(Listen, LDAPAuthHandler)
-    if os.path.isfile(os.environ.get("CERTFILE")) and os.path.isfile(os.environ.get("KEYFILE")):
+    if os.environ.get("CERTFILE") and os.environ.get("KEYFILE") and os.path.isfile(os.environ.get("CERTFILE")) and os.path.isfile(os.environ.get("KEYFILE")):
         import ssl
         server.socket = ssl.wrap_socket (server.socket, certfile=os.environ.get("CERTFILE"), keyfile=os.environ.get("KEYFILE"), server_side=True)
         sys.stdout.write("SSL enabled using certificate file %s and key file %s\n" % (os.environ.get("CERTFILE"), os.environ.get("KEYFILE")))
