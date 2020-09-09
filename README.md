@@ -206,6 +206,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **08.09.20:** - Set form action correctly.
 * **30.07.20:** - Fix bug related to unset optional `CERTFILE` and `KEYFILE` vars.
 * **27.07.20:** - Add support for HTTP over SSL (HTTPS).
 * **21.07.20:** - Add support for optional user defined fernet key.

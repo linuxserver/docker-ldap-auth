@@ -2,12 +2,12 @@
 ''''which python  >/dev/null && exec python  "$0" "$@" # '''
 
 # Copyright (C) 2014-2015 Nginx, Inc.
-# Copyright (C) 2018 LinuxServer.io
+# Copyright (C) 2018-2020 LinuxServer.io
 
 # Example of an application working on port 9000
 # To interact with nginx-ldap-auth-daemon this application
-# 1) accepts GET  requests on /login and responds with a login form
-# 2) accepts POST requests on /login, sets a cookie, and responds with redirect
+# 1) accepts GET  requests on /login and /ldaplogin and responds with a login form
+# 2) accepts POST requests on /login and /ldaplogin, sets a cookie, and responds with redirect
 
 import sys, os, signal, base64, cgi
 if sys.version_info.major == 2:
@@ -43,8 +43,11 @@ class AppHandler(BaseHTTPRequestHandler):
 
         url = urlparse(self.path)
 
-        if url.path.startswith("/login") or url.path.startswith("/ldaplogin"):
-            return self.auth_form()
+        # set the proper login page subfolder and serve form
+        if url.path.startswith("/login"):
+            return self.auth_form(loginsubfolder="/login")
+        if url.path.startswith("/ldaplogin"):
+            return self.auth_form(loginsubfolder="/ldaplogin")
 
         self.send_response(200)
         self.end_headers()
@@ -52,7 +55,7 @@ class AppHandler(BaseHTTPRequestHandler):
 
 
     # send login form html
-    def auth_form(self, target = None):
+    def auth_form(self, target = None, loginsubfolder = ""):
 
         # try to get target location from header
         if target == None:
@@ -88,7 +91,7 @@ class AppHandler(BaseHTTPRequestHandler):
         <div class="log-in">
             <div class="content">
                 <h1>Log in to your account</h1>
-                <form action="/login" method="post">
+                <form action="LOGINSUBFOLDER" method="post">
                     <p>
                         <input type="text" name="username" placeholder="Username" aria-label="Username" />
                     </p>
@@ -109,6 +112,7 @@ class AppHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         self.wfile.write(ensure_bytes(html.replace('TARGET', target)))
+        self.wfile.write(ensure_bytes(html.replace('LOGINSUBFOLDER', loginsubfolder)))
 
 
     # processes posted form and sets the cookie with login/password
