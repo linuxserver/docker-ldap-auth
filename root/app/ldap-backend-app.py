@@ -111,8 +111,7 @@ class AppHandler(BaseHTTPRequestHandler):
 
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(ensure_bytes(html.replace('TARGET', target)))
-        self.wfile.write(ensure_bytes(html.replace('LOGINSUBFOLDER', loginsubfolder)))
+        self.wfile.write(ensure_bytes(html.replace('TARGET', target).replace('LOGINSUBFOLDER', loginsubfolder)))
 
 
     # processes posted form and sets the cookie with login/password
