@@ -1,0 +1,35 @@
+name: Package Trigger
+
+on:
+  schedule:
+    - cron:  '52 14 * * 4'
+  workflow_dispatch:
+
+jobs:
+  package-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.3
+        with:
+          fetch-depth: '0'
+        
+      - name: Package Trigger
+        run: |
+          git for-each-ref --format='%(refname:short)' refs/remotes
+          docker pull ghcr.io/linuxserver/yq
+          for br in $(git for-each-ref --format='%(refname:short)' refs/remotes)
+          do
+            br=$(echo "$br" | sed 's|origin/||g')
+            echo "evaluating branch ${br}"
+            ls_branch=$(curl -sX GET https://raw.githubusercontent.com/linuxserver/docker-ldap-auth/${br}/jenkins-vars.yml \
+              | docker run --rm -i --entrypoint yq ghcr.io/linuxserver/yq -r .ls_branch)
+            if [ "$br" == "$ls_branch" ]; then
+              echo "it's a match, triggering build for ${br}"
+              curl -X POST \
+                https://ci.linuxserver.io/job/Docker-Pipeline-Builders/job/docker-ldap-auth/job/${br}/buildWithParameters?PACKAGE_CHECK=true \
+                --user ${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}
+              sleep 30
+            else
+              echo "no match, skipping branch ${br}"
+            fi
+          done
