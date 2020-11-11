@@ -24,18 +24,24 @@ jobs:
             ls_branch=$(curl -sX GET https://raw.githubusercontent.com/linuxserver/docker-ldap-auth/${br}/jenkins-vars.yml \
               | docker run --rm -i --entrypoint yq ghcr.io/linuxserver/yq -r .ls_branch)
             if [ "$br" == "$ls_branch" ]; then
-              echo "it's a match, checking workflow"
+              echo "${br} is a live branch, checking workflow."
               if curl -sfX GET https://raw.githubusercontent.com/linuxserver/docker-ldap-auth/${br}/.github/workflows/external_trigger.yml > /dev/null 2>&1; then
-                echo "workflow exists, triggering"
-                curl -iX POST \
-                  -H "Authorization: token ${{ secrets.CR_PAT }}" \
-                  -H "Accept: application/vnd.github.v3+json" \
-                  -d "{\"ref\":\"refs/heads/${br}\"}" \
-                  https://api.github.com/repos/linuxserver/docker-ldap-auth/actions/workflows/external_trigger.yml/dispatches
+                echo "Workflow exists."
+                pause_trigger="$(eval echo \${pause_external_trigger_ldap-auth_$ls_branch})"
+                if [ -z "$pause_trigger" ]; then
+                  echo "Triggering external build for branch ${br} (you can pause this trigger by setting a github secret \"pause_external_trigger_ldap-auth_${ls_branch}\")."
+                  curl -iX POST \
+                    -H "Authorization: token ${{ secrets.CR_PAT }}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -d "{\"ref\":\"refs/heads/${br}\"}" \
+                    https://api.github.com/repos/linuxserver/docker-ldap-auth/actions/workflows/external_trigger.yml/dispatches
+                else
+                  echo "Github secret \"pause_external_trigger_ldap-auth_${ls_branch}\" is set; skipping trigger."
+                fi
               else
-                echo "workflow doesn't exist, skipping"
+                echo "Workflow doesn't exist; skipping trigger."
               fi
             else
-              echo "no match, skipping"
+              echo "${br} appears to be a dev branch; skipping trigger."
             fi
           done

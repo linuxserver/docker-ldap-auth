@@ -20,16 +20,19 @@ jobs:
           for br in $(git for-each-ref --format='%(refname:short)' refs/remotes)
           do
             br=$(echo "$br" | sed 's|origin/||g')
-            echo "evaluating branch ${br}"
+            echo "Evaluating branch ${br}"
             ls_branch=$(curl -sX GET https://raw.githubusercontent.com/linuxserver/docker-ldap-auth/${br}/jenkins-vars.yml \
               | docker run --rm -i --entrypoint yq ghcr.io/linuxserver/yq -r .ls_branch)
-            if [ "$br" == "$ls_branch" ]; then
-              echo "it's a match, triggering build for ${br}"
+            pause_trigger="$(eval echo \${pause_package_trigger_ldap-auth_$ls_branch})"
+            if [ "${br}" == "${ls_branch}" ] && [ -z "${pause_triger}" ]; then
+              echo "${br} is a live branch; triggering package build (you can pause this trigger by setting a github secret \"pause_package_trigger_ldap-auth_${ls_branch}\")."
               curl -X POST \
                 https://ci.linuxserver.io/job/Docker-Pipeline-Builders/job/docker-ldap-auth/job/${br}/buildWithParameters?PACKAGE_CHECK=true \
                 --user ${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}
               sleep 30
+            elif [ "${br}" == "${ls_branch}" ] && [ -n "${pause_triger}" ]; then
+              echo "Github secret \"pause_package_trigger_ldap-auth_${ls_branch}\" is set; skipping trigger."
             else
-              echo "no match, skipping branch ${br}"
+              echo "${br} appears to be a dev branch; skipping."
             fi
           done
