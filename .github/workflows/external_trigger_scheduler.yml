@@ -1,0 +1,41 @@
+name: External Trigger Scheduler
+
+on:
+  schedule:
+    - cron:  '32 * * * *'
+  workflow_dispatch:
+
+jobs:
+  external-trigger-scheduler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.3
+        with:
+          fetch-depth: '0'
+        
+      - name: External Trigger Scheduler
+        run: |
+          git for-each-ref --format='%(refname:short)' refs/remotes
+          docker pull ghcr.io/linuxserver/yq
+          for br in $(git for-each-ref --format='%(refname:short)' refs/remotes)
+          do
+            br=$(echo "$br" | sed 's|origin/||g')
+            echo "evaluating branch ${br}"
+            ls_branch=$(curl -sX GET https://raw.githubusercontent.com/linuxserver/docker-ldap-auth/${br}/jenkins-vars.yml \
+              | docker run --rm -i --entrypoint yq ghcr.io/linuxserver/yq -r .ls_branch)
+            if [ "$br" == "$ls_branch" ]; then
+              echo "it's a match, checking workflow"
+              if curl -sfX GET https://raw.githubusercontent.com/linuxserver/docker-ldap-auth/${br}/.github/workflows/external_trigger.yml > /dev/null 2>&1; then
+                echo "workflow exists, triggering"
+                curl -iX POST \
+                  -H "Authorization: token ${{ secrets.CR_PAT }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  -d "{\"ref\":\"refs/heads/${br}\"}" \
+                  https://api.github.com/repos/linuxserver/docker-ldap-auth/actions/workflows/external_trigger.yml/dispatches
+              else
+                echo "workflow doesn't exist, skipping"
+              fi
+            else
+              echo "no match, skipping"
+            fi
+          done
