@@ -12,7 +12,7 @@ jobs:
       - name: Package Trigger
         if: github.ref == 'refs/heads/master'
         run: |
-          if [ -n ${{ secrets.PAUSE_PACKAGE_TRIGGER_LDAP_AUTH_MASTER }} ]; then
+          if [ -n "${{ secrets.PAUSE_PACKAGE_TRIGGER_LDAP_AUTH_MASTER }}" ]; then
             echo "Github secret PAUSE_PACKAGE_TRIGGER_LDAP_AUTH_MASTER is set; skipping trigger."
             exit 0
           fi
