@@ -34,7 +34,6 @@ jobs:
           token=$(curl -sX GET \
             "https://ghcr.io/token?scope=repository%3Alinuxserver%2Fldap-auth%3Apull" \
             | jq -r '.token')
-          if [ "${MULTIARCH}" == "true" ]; then
             multidigest=$(curl -s \
               --header "Accept: application/vnd.docker.distribution.manifest.v2+json" \
               --header "Authorization: Bearer ${token}" \
@@ -45,13 +44,6 @@ jobs:
               --header "Authorization: Bearer ${token}" \
               "https://ghcr.io/v2/${image}/manifests/${multidigest}" \
               | jq -r '.config.digest')
-          else
-            digest=$(curl -s \
-              --header "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-              --header "Authorization: Bearer ${token}" \
-              "https://ghcr.io/v2/${image}/manifests/${tag}" \
-              | jq -r '.config.digest')
-          fi
           image_info=$(curl -sL \
             --header "Authorization: Bearer ${token}" \
             "https://ghcr.io/v2/${image}/blobs/${digest}" \
