@@ -2,7 +2,7 @@ name: External Trigger Scheduler
 
 on:
   schedule:
-    - cron:  '32 * * * *'
+    - cron:  '30 * * * *'
   workflow_dispatch:
 
 jobs:
