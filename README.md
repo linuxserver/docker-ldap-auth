@@ -210,6 +210,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **10.02.21:** - Rebasing to alpine 3.13.
 * **08.09.20:** - Set form action correctly.
 * **30.07.20:** - Fix bug related to unset optional `CERTFILE` and `KEYFILE` vars.
 * **27.07.20:** - Add support for HTTP over SSL (HTTPS).

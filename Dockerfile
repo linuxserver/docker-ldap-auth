@@ -11,6 +11,7 @@ RUN \
  echo "**** install build packages ****" && \
  apk add --no-cache --virtual=build-dependencies \
 	build-base \
+	cargo \
 	libffi-dev \
 	openldap-dev \
 	python3-dev && \
