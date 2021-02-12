@@ -36,7 +36,8 @@ RUN \
 	build-dependencies && \
  rm -rf \
 	/tmp/* \
-	/root/.cache/pip
+	/root/.cache \
+	/root/.cargo
 
 # copy local files
 COPY root/ /
