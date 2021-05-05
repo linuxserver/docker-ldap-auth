@@ -29,7 +29,7 @@ param_env_vars:
 # optional container parameters
 opt_param_usage_include_env: true
 opt_param_env_vars:
-  - { env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom fernet key, has to be base64-encoded 32-byte (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications)" }
+  - { env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom fernet key, has to be URL-safe base64-encoded 32-byte (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications)" }
   - { env_var: "CERTFILE", env_value: "", desc: "Point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon" }
   - { env_var: "KEYFILE", env_value: "", desc: "Point this to the private key file, matching the certificate file referred to in CERTFILE" }
 
