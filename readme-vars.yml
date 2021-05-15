@@ -43,6 +43,7 @@ app_setup_block: |
 
 # changelog
 changelogs:
+  - { date: "14.05.21:", desc: "Add linuxserver wheel index." }
   - { date: "12.02.21:", desc: "Clean up cargo/rust cache." }
   - { date: "10.02.21:", desc: "Rebasing to alpine 3.13." }
   - { date: "08.09.20:", desc: "Set form action correctly." }
