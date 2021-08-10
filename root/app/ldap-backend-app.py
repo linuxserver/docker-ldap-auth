@@ -131,6 +131,7 @@ class AppHandler(BaseHTTPRequestHandler):
         target = form.getvalue('target')
 
         if user != None and passwd != None and target != None:
+            cookiemaxage = self.headers.get('X-CookieMaxAge')
 
             # form is filled, set the cookie and redirect to target
             # so that auth daemon will be able to use information from cookie
@@ -140,7 +141,11 @@ class AppHandler(BaseHTTPRequestHandler):
             cipher_suite = Fernet(REPLACEWITHFERNETKEY)
             enc = cipher_suite.encrypt(ensure_bytes(user + ':' + passwd))
             enc = enc.decode()
-            self.send_header('Set-Cookie', 'nginxauth=' + enc + '; httponly')
+            cookie_header = 'nginxauth=' + enc
+            if cookiemaxage != None:
+                cookie_header += f'; Max-Age={cookiemaxage}'
+            cookie_header += '; httponly'
+            self.send_header('Set-Cookie', cookie_header)
 
             self.send_header('Location', target)
             self.end_headers()
