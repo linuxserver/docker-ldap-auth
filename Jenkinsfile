@@ -879,7 +879,7 @@ pipeline {
                   if [ -n "${SEMVER}" ]; then
                     docker rmi \
                     ${DELETEIMAGE}:amd64-${SEMVER} \
-                    ${DELETEIMAGE}:arm32v7-${SEMVER} \ \
+                    ${DELETEIMAGE}:arm32v7-${SEMVER} \
                     ${DELETEIMAGE}:arm64v8-${SEMVER} || :
                   fi
                 done
