@@ -6,7 +6,7 @@ busybox-1.32.1-r7
 ca-certificates-20211220-r0
 ca-certificates-bundle-20211220-r0
 coreutils-8.32-r2
-expat-2.2.10-r3
+expat-2.2.10-r4
 gdbm-1.19-r0
 libacl-2.2.53-r0
 libattr-2.4.48-r0
