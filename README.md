@@ -56,7 +56,7 @@ The architectures supported by this image are:
 | :----: | :----: | ---- |
 | x86-64 | ✅ | amd64-\<version tag\> |
 | arm64 | ✅ | arm64v8-\<version tag\> |
-| armhf| ✅ | arm32v7-\<version tag\> |
+| armhf | ✅ | arm32v7-\<version tag\> |
 
 ## Application Setup
 
@@ -79,7 +79,6 @@ services:
     image: lscr.io/linuxserver/ldap-auth:latest
     container_name: ldap-auth
     environment:
-      - TZ=Europe/London
       - FERNETKEY= #optional
       - CERTFILE= #optional
       - KEYFILE= #optional
@@ -94,7 +93,6 @@ services:
 ```bash
 docker run -d \
   --name=ldap-auth \
-  -e TZ=Europe/London \
   -e FERNETKEY= `#optional` \
   -e CERTFILE= `#optional` \
   -e KEYFILE= `#optional` \
@@ -102,6 +100,7 @@ docker run -d \
   -p 9000:9000 \
   --restart unless-stopped \
   lscr.io/linuxserver/ldap-auth:latest
+
 ```
 
 ## Parameters
@@ -112,7 +111,6 @@ Container images are configured using parameters passed at runtime (such as thos
 | :----: | --- |
 | `-p 8888` | the port for ldap auth daemon |
 | `-p 9000` | the port for ldap login page |
-| `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London |
 | `-e FERNETKEY=` | Optionally define a custom fernet key, has to be base64-encoded 32-byte (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications) |
 | `-e CERTFILE=` | Point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon |
 | `-e KEYFILE=` | Point this to the private key file, matching the certificate file referred to in CERTFILE |
