@@ -3,7 +3,7 @@
 # project information
 project_name: ldap-auth
 project_url: "https://github.com/nginxinc/nginx-ldap-auth"
-project_logo: "https://jumpcloud.com/wp-content/uploads/2016/12/LDAP_Logo-1420591101.jpg"
+project_logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ldap-auth-logo.png"
 project_blurb: "[{{ project_name|capitalize }}]({{ project_url }}) software is for authenticating users who request protected resources from servers proxied by nginx. It includes a daemon (ldap-auth) that communicates with an authentication server, and a webserver daemon that generates an authentication cookie based on the user’s credentials. The daemons are written in Python for use with a Lightweight Directory Access Protocol (LDAP) authentication server (OpenLDAP or Microsoft Windows Active Directory 2003 and 2012)."
 project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_name }}"
 
@@ -29,9 +29,9 @@ param_env_vars:
 # optional container parameters
 opt_param_usage_include_env: true
 opt_param_env_vars:
-  - { env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom fernet key, has to be base64-encoded 32-byte (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications)" }
-  - { env_var: "CERTFILE", env_value: "", desc: "Point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon" }
-  - { env_var: "KEYFILE", env_value: "", desc: "Point this to the private key file, matching the certificate file referred to in CERTFILE" }
+  - { env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom valid fernet key (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications)" }
+  - { env_var: "CERTFILE", env_value: "", desc: "Optionally point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon" }
+  - { env_var: "KEYFILE", env_value: "", desc: "Optionally point this to the private key file, matching the certificate file referred to in CERTFILE" }
 
 # application setup block
 app_setup_block_enabled: true
@@ -43,7 +43,7 @@ app_setup_block: |
 
 # changelog
 changelogs:
-  - { date: "19.09.22:", desc: "Rebase to alpine 3.17." }
+  - { date: "30.12.22:", desc: "Rebase to alpine 3.17." }
   - { date: "19.09.22:", desc: "Rebase to alpine 3.15." }
   - { date: "14.05.21:", desc: "Add linuxserver wheel index." }
   - { date: "12.02.21:", desc: "Clean up cargo/rust cache." }
