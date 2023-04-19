@@ -42,7 +42,7 @@ Find us at:
 
 [Ldap-auth](https://github.com/nginxinc/nginx-ldap-auth) software is for authenticating users who request protected resources from servers proxied by nginx. It includes a daemon (ldap-auth) that communicates with an authentication server, and a webserver daemon that generates an authentication cookie based on the user’s credentials. The daemons are written in Python for use with a Lightweight Directory Access Protocol (LDAP) authentication server (OpenLDAP or Microsoft Windows Active Directory 2003 and 2012).
 
-[![ldap-auth](https://jumpcloud.com/wp-content/uploads/2016/12/LDAP_Logo-1420591101.jpg)](https://github.com/nginxinc/nginx-ldap-auth)
+[![ldap-auth](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/ldap-auth-logo.png)](https://github.com/nginxinc/nginx-ldap-auth)
 
 ## Supported Architectures
 
@@ -111,9 +111,9 @@ Container images are configured using parameters passed at runtime (such as thos
 | :----: | --- |
 | `-p 8888` | the port for ldap auth daemon |
 | `-p 9000` | the port for ldap login page |
-| `-e FERNETKEY=` | Optionally define a custom fernet key, has to be base64-encoded 32-byte (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications) |
-| `-e CERTFILE=` | Point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon |
-| `-e KEYFILE=` | Point this to the private key file, matching the certificate file referred to in CERTFILE |
+| `-e FERNETKEY=` | Optionally define a custom valid fernet key (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications) |
+| `-e CERTFILE=` | Optionally point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon |
+| `-e KEYFILE=` | Optionally point this to the private key file, matching the certificate file referred to in CERTFILE |
 
 ## Environment variables from files (Docker secrets)
 
@@ -211,7 +211,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
-* **19.09.22:** - Rebase to alpine 3.17.
+* **30.12.22:** - Rebase to alpine 3.17.
 * **19.09.22:** - Rebase to alpine 3.15.
 * **14.05.21:** - Add linuxserver wheel index.
 * **12.02.21:** - Clean up cargo/rust cache.
