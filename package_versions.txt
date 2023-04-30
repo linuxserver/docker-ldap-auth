@@ -43,7 +43,7 @@ ncurses-terminfo-base   6.3_p20221119-r0       apk
 netcat-openbsd          1.130-r4               apk     
 nghttp2-libs            1.51.0-r0              apk     
 oniguruma               6.9.8-r0               apk     
-pip                     23.1.1                 python  
+pip                     23.1.2                 python  
 procps                  3.3.17-r2              apk     
 pyasn1                  0.5.0                  python  
 pyasn1-modules          0.3.0                  python  
