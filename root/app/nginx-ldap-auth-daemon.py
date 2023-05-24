@@ -172,6 +172,7 @@ class LDAPAuthHandler(AuthHandler):
              'realm': ('X-Ldap-Realm', 'Restricted'),
              'url': ('X-Ldap-URL', None),
              'starttls': ('X-Ldap-Starttls', 'false'),
+             'disable_referrals': ('X-Ldap-DisableReferrals', 'false'),
              'basedn': ('X-Ldap-BaseDN', None),
              'template': ('X-Ldap-Template', '(cn=%(username)s)'),
              'binddn': ('X-Ldap-BindDN', ''),
@@ -233,9 +234,9 @@ class LDAPAuthHandler(AuthHandler):
             if ctx['starttls'] == 'true':
                 ldap_obj.start_tls_s()
 
-            # See http://www.python-ldap.org/faq.shtml
-            # uncomment, if required
-            # ldap_obj.set_option(ldap.OPT_REFERRALS, 0)
+            # See https://www.python-ldap.org/en/latest/faq.html
+            if ctx['disable_referrals'] == 'true':
+                ldap_obj.set_option(ldap.OPT_REFERRALS, 0)
 
             ctx['action'] = 'binding as search user'
             ldap_obj.bind_s(ctx['binddn'], ctx['bindpasswd'], ldap.AUTH_SIMPLE)
@@ -328,6 +329,7 @@ if __name__ == '__main__':
              'realm': ('X-Ldap-Realm', args.realm),
              'url': ('X-Ldap-URL', args.url),
              'starttls': ('X-Ldap-Starttls', args.starttls),
+             'disable_referrals': ('X-Ldap-DisableReferrals', args.disable_referrals),
              'basedn': ('X-Ldap-BaseDN', args.basedn),
              'template': ('X-Ldap-Template', args.filter),
              'binddn': ('X-Ldap-BindDN', args.binddn),
