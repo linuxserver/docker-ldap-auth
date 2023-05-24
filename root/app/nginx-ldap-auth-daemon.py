@@ -5,7 +5,7 @@
 # Copyright (C) 2014-2015 Nginx, Inc.
 # Copyright (C) 2018 LinuxServer.io
 
-import sys, os, signal, base64, ldap, argparse
+import sys, os, signal, base64, ldap, ldap.filter, argparse
 if sys.version_info.major == 2:
     from Cookie import BaseCookie
     from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
@@ -101,7 +101,7 @@ class AuthHandler(BaseHTTPRequestHandler):
             self.log_error(e)
             return True
 
-        ctx['user'] = user
+        ctx['user'] = ldap.filter.escape_filter_chars(user)
         ctx['pass'] = passwd
 
         # Continue request processing
