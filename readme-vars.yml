@@ -11,7 +11,6 @@ project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_
 available_architectures:
   - { arch: "{{ arch_x86_64 }}", tag: "amd64-latest"}
   - { arch: "{{ arch_arm64 }}", tag: "arm64v8-latest"}
-  - { arch: "{{ arch_armhf }}", tag: "arm32v7-latest"}
 
 # container parameters
 common_param_env_vars_enabled: false
@@ -43,7 +42,8 @@ app_setup_block: |
 
 # changelog
 changelogs:
-  - { date: "24.05.23:", desc: "Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`." }
+  - { date: "20.06.23:", desc: "Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`." }
+  - { date: "25.05.23:", desc: "Rebase to Alpine 3.18, deprecate armhf." }
   - { date: "30.12.22:", desc: "Rebase to alpine 3.17." }
   - { date: "19.09.22:", desc: "Rebase to alpine 3.15." }
   - { date: "14.05.21:", desc: "Add linuxserver wheel index." }
