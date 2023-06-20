@@ -5,7 +5,7 @@
 # Copyright (C) 2014-2015 Nginx, Inc.
 # Copyright (C) 2018 LinuxServer.io
 
-import sys, os, signal, base64, ldap, argparse
+import sys, os, signal, base64, ldap, ldap.filter, argparse
 if sys.version_info.major == 2:
     from Cookie import BaseCookie
     from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
@@ -101,7 +101,7 @@ class AuthHandler(BaseHTTPRequestHandler):
             self.log_error(e)
             return True
 
-        ctx['user'] = user
+        ctx['user'] = ldap.filter.escape_filter_chars(user)
         ctx['pass'] = passwd
 
         # Continue request processing
@@ -172,6 +172,7 @@ class LDAPAuthHandler(AuthHandler):
              'realm': ('X-Ldap-Realm', 'Restricted'),
              'url': ('X-Ldap-URL', None),
              'starttls': ('X-Ldap-Starttls', 'false'),
+             'disable_referrals': ('X-Ldap-DisableReferrals', 'false'),
              'basedn': ('X-Ldap-BaseDN', None),
              'template': ('X-Ldap-Template', '(cn=%(username)s)'),
              'binddn': ('X-Ldap-BindDN', ''),
@@ -233,9 +234,9 @@ class LDAPAuthHandler(AuthHandler):
             if ctx['starttls'] == 'true':
                 ldap_obj.start_tls_s()
 
-            # See http://www.python-ldap.org/faq.shtml
-            # uncomment, if required
-            # ldap_obj.set_option(ldap.OPT_REFERRALS, 0)
+            # See https://www.python-ldap.org/en/latest/faq.html
+            if ctx['disable_referrals'] == 'true':
+                ldap_obj.set_option(ldap.OPT_REFERRALS, 0)
 
             ctx['action'] = 'binding as search user'
             ldap_obj.bind_s(ctx['binddn'], ctx['bindpasswd'], ldap.AUTH_SIMPLE)
@@ -252,13 +253,27 @@ class LDAPAuthHandler(AuthHandler):
                                           searchfilter, ['objectclass'], 1)
 
             ctx['action'] = 'verifying search query results'
-            if len(results) < 1:
+            
+            nres = len(results)
+
+            if nres < 1:
                 self.auth_failed(ctx, 'no objects found')
                 return
 
-            ctx['action'] = 'binding as an existing user'
-            ldap_dn = results[0][0]
-            ctx['action'] += ' "%s"' % ldap_dn
+            if nres > 1:
+                self.log_message("note: filter match multiple objects: %d, using first" % nres)
+
+            user_entry = results[0]
+            ldap_dn = user_entry[0]
+
+            if ldap_dn == None:
+                self.auth_failed(ctx, 'matched object has no dn')
+                return
+
+            self.log_message('attempting to bind using dn "%s"' % (ldap_dn))
+
+            ctx['action'] = 'binding as an existing user "%s"' % ldap_dn
+
             ldap_obj.bind_s(ldap_dn, ctx['pass'], ldap.AUTH_SIMPLE)
 
             self.log_message('Auth OK for user "%s"' % (ctx['user']))
@@ -328,6 +343,7 @@ if __name__ == '__main__':
              'realm': ('X-Ldap-Realm', args.realm),
              'url': ('X-Ldap-URL', args.url),
              'starttls': ('X-Ldap-Starttls', args.starttls),
+             'disable_referrals': ('X-Ldap-DisableReferrals', args.disable_referrals),
              'basedn': ('X-Ldap-BaseDN', args.basedn),
              'template': ('X-Ldap-Template', args.filter),
              'binddn': ('X-Ldap-BindDN', args.binddn),
