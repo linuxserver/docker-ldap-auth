@@ -14,7 +14,7 @@ ca-certificates-bundle  20230506-r0             apk
 cffi                    1.15.1                  python  
 coreutils               9.3-r1                  apk     
 cryptography            41.0.2                  python  
-curl                    8.1.2-r0                apk     
+curl                    8.2.0-r1                apk     
 gdbm                    1.23-r1                 apk     
 jq                      1.6-r3                  apk     
 libacl                  2.3.1-r3                apk     
@@ -22,8 +22,8 @@ libattr                 2.5.1-r4                apk
 libbsd                  0.11.7-r1               apk     
 libbz2                  1.0.8-r5                apk     
 libc-utils              0.7.2-r5                apk     
-libcrypto3              3.1.1-r2                apk     
-libcurl                 8.1.2-r0                apk     
+libcrypto3              3.1.1-r3                apk     
+libcurl                 8.2.0-r1                apk     
 libexpat                2.5.0-r1                apk     
 libffi                  3.4.4-r2                apk     
 libgcc                  12.2.1_git20220924-r10  apk     
@@ -35,7 +35,7 @@ libncursesw             6.4_p20230506-r0        apk
 libpanelw               6.4_p20230506-r0        apk     
 libproc2                4.0.3-r1                apk     
 libsasl                 2.1.28-r4               apk     
-libssl3                 3.1.1-r2                apk     
+libssl3                 3.1.1-r3                apk     
 libstdc++               12.2.1_git20220924-r10  apk     
 libunistring            1.1-r1                  apk     
 linux-pam               1.5.2-r10               apk     
@@ -44,9 +44,9 @@ musl                    1.2.4-r0                apk
 musl-utils              1.2.4-r0                apk     
 ncurses-terminfo-base   6.4_p20230506-r0        apk     
 netcat-openbsd          1.219-r1                apk     
-nghttp2-libs            1.53.0-r0               apk     
+nghttp2-libs            1.55.1-r0               apk     
 oniguruma               6.9.8-r1                apk     
-pip                     23.2                    python  
+pip                     23.2.1                  python  
 procps-ng               4.0.3-r1                apk     
 pyasn1                  0.5.0                   python  
 pyasn1-modules          0.3.0                   python  
@@ -66,6 +66,6 @@ sqlite-libs             3.41.2-r2               apk
 ssl_client              1.36.1-r1               apk     
 tzdata                  2023c-r1                apk     
 utmps-libs              0.1.2.1-r1              apk     
-wheel                   0.40.0                  python  
+wheel                   0.41.0                  python  
 xz-libs                 5.4.3-r0                apk     
 zlib                    1.2.13-r1               apk     
