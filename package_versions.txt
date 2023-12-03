@@ -3,7 +3,7 @@ SimpleLauncherExecutable  1.1.0.14                dotnet
 alpine-baselayout         3.4.3-r1                apk     
 alpine-baselayout-data    3.4.3-r1                apk     
 alpine-keys               2.4-r1                  apk     
-alpine-release            3.18.4-r0               apk     
+alpine-release            3.18.5-r0               apk     
 apk-tools                 2.14.0-r2               apk     
 bash                      5.2.15-r5               apk     
 brotli-libs               1.0.9-r14               apk     
@@ -13,7 +13,7 @@ ca-certificates           20230506-r0             apk
 ca-certificates-bundle    20230506-r0             apk     
 cffi                      1.16.0                  python  
 coreutils                 9.3-r1                  apk     
-cryptography              41.0.5                  python  
+cryptography              41.0.7                  python  
 curl                      8.4.0-r0                apk     
 gdbm                      1.23-r1                 apk     
 jq                        1.6-r3                  apk     
@@ -65,6 +65,6 @@ sqlite-libs               3.41.2-r2               apk
 ssl_client                1.36.1-r5               apk     
 tzdata                    2023c-r1                apk     
 utmps-libs                0.1.2.1-r1              apk     
-wheel                     0.41.3                  python  
+wheel                     0.42.0                  python  
 xz-libs                   5.4.3-r0                apk     
 zlib                      1.2.13-r1               apk     
