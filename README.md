@@ -271,6 +271,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **23.12.23:** - Rebase to Alpine 3.19.
 * **20.06.23:** - Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`.
 * **25.05.23:** - Rebase to Alpine 3.18, deprecate armhf.
 * **30.12.22:** - Rebase to alpine 3.17.
