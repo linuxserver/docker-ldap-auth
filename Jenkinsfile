@@ -16,6 +16,7 @@ pipeline {
     GITHUB_TOKEN=credentials('498b4638-2d02-4ce5-832d-8a57d01d97ab')
     GITLAB_TOKEN=credentials('b6f0f1dd-6952-4cf6-95d1-9c06380283f0')
     GITLAB_NAMESPACE=credentials('gitlab-namespace-id')
+    DOCKERHUB_TOKEN=credentials('docker-hub-ci-pat')
     EXT_RELEASE_TYPE = 'pip_version'
     EXT_PIP = 'python-ldap'
     BUILD_VERSION_ARG = 'LDAP_VERSION'
@@ -390,13 +391,13 @@ pipeline {
                     echo "Syncing readme to Docker Hub"
                     DH_README_SYNC_PATH="${TEMPDIR}/docker-${CONTAINER_NAME}/.jenkins-external/README.lite"
                   fi
-                  DH_TOKEN=$(curl -d '{"username":"'${DOCKERUSER}'", "password":"'${DOCKERPASS}'"}' -H "Content-Type: application/json" -X POST https://hub.docker.com/v2/users/login | jq -r '.token')
+                  DH_TOKEN=$(curl -d '{"username":"'${DOCKERUSER}'", "password":"'${DOCKERHUB_TOKEN}'"}' -H "Content-Type: application/json" -X POST https://hub.docker.com/v2/users/login | jq -r '.token')
                   curl -s \
                     -H "Authorization: JWT ${DH_TOKEN}" \
                     -H "Content-Type: application/json" \
                     -X PATCH \
-                    -d "{\"full_description\":$(jq -Rsa . ${DH_README_SYNC_PATH})}" \
-                    https://hub.docker.com/v2/repositories/${DOCKERHUB_IMAGE}
+                    -d "{\\"full_description\\":$(jq -Rsa . ${DH_README_SYNC_PATH})}" \
+                    https://hub.docker.com/v2/repositories/${DOCKERHUB_IMAGE} || :
                 else
                   echo "Not the default Github branch. Skipping readme sync to Docker Hub."
                 fi
