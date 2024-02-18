@@ -17,7 +17,7 @@ coreutils               9.4-r2                 apk
 coreutils-env           9.4-r2                 apk     
 coreutils-fmt           9.4-r2                 apk     
 coreutils-sha512sum     9.4-r2                 apk     
-cryptography            42.0.2                 python  
+cryptography            42.0.3                 python  
 curl                    8.5.0-r0               apk     
 gdbm                    1.23-r1                apk     
 jq                      1.7.1-r0               apk     
