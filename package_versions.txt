@@ -3,7 +3,7 @@ Simple Launcher         1.1.0.14               dotnet  (+5 duplicates)
 alpine-baselayout       3.4.3-r2               apk                      
 alpine-baselayout-data  3.4.3-r2               apk                      
 alpine-keys             2.4-r1                 apk                      
-alpine-release          3.19.1-r0              apk                      
+alpine-release          3.19.2-r0              apk                      
 apk-tools               2.14.4-r0              apk                      
 bash                    5.2.21-r0              apk                      
 brotli-libs             1.1.0-r1               apk                      
@@ -52,7 +52,7 @@ ncurses-terminfo-base   6.4_p20231125-r0       apk
 netcat-openbsd          1.226-r0               apk                      
 nghttp2-libs            1.58.0-r0              apk                      
 oniguruma               6.9.9-r0               apk                      
-pip                     24.0                   python                   
+pip                     24.1                   python                   
 procps-ng               4.0.4-r0               apk                      
 pyasn1                  0.6.0                  python                   
 pyasn1_modules          0.4.0                  python                   
