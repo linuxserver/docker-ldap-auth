@@ -13,17 +13,10 @@ available_architectures:
   - { arch: "{{ arch_arm64 }}", tag: "arm64v8-latest"}
 
 # container parameters
-common_param_env_vars_enabled: false
-param_container_name: "{{ project_name }}"
-param_usage_include_vols: false
-param_volumes: ""
 param_usage_include_ports: true
 param_ports:
   - { external_port: "8888", internal_port: "8888", port_desc: "the port for ldap auth daemon" }
   - { external_port: "9000", internal_port: "9000", port_desc: "the port for ldap login page" }
-param_usage_include_env: true
-param_env_vars:
-  - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London" }
 
 # optional container parameters
 opt_param_usage_include_env: true
@@ -42,6 +35,7 @@ app_setup_block: |
 
 # changelog
 changelogs:
+  - { date: "30.06.24:", desc: "Rebase to Alpine 3.20."}
   - { date: "23.12.23:", desc: "Rebase to Alpine 3.19."}
   - { date: "20.06.23:", desc: "Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`." }
   - { date: "25.05.23:", desc: "Rebase to Alpine 3.18, deprecate armhf." }
