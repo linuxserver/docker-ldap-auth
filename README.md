@@ -77,6 +77,9 @@ services:
     image: lscr.io/linuxserver/ldap-auth:latest
     container_name: ldap-auth
     environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
       - FERNETKEY= #optional
       - CERTFILE= #optional
       - KEYFILE= #optional
@@ -91,6 +94,9 @@ services:
 ```bash
 docker run -d \
   --name=ldap-auth \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Etc/UTC \
   -e FERNETKEY= `#optional` \
   -e CERTFILE= `#optional` \
   -e KEYFILE= `#optional` \
@@ -108,6 +114,9 @@ Containers are configured using parameters passed at runtime (such as those abov
 | :----: | --- |
 | `-p 8888` | the port for ldap auth daemon |
 | `-p 9000` | the port for ldap login page |
+| `-e PUID=1000` | for UserID - see below for explanation |
+| `-e PGID=1000` | for GroupID - see below for explanation |
+| `-e TZ=Etc/UTC` | specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List). |
 | `-e FERNETKEY=` | Optionally define a custom valid fernet key (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications) |
 | `-e CERTFILE=` | Optionally point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon |
 | `-e KEYFILE=` | Optionally point this to the private key file, matching the certificate file referred to in CERTFILE |
@@ -128,6 +137,24 @@ Will set the environment variable `MYVAR` based on the contents of the `/run/sec
 
 For all of our images we provide the ability to override the default umask settings for services started within the containers using the optional `-e UMASK=022` setting.
 Keep in mind umask is not chmod it subtracts from permissions based on it's value it does not add. Please read up [here](https://en.wikipedia.org/wiki/Umask) before asking for support.
+
+## User / Group Identifiers
+
+When using volumes (`-v` flags), permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user `PUID` and group `PGID`.
+
+Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
+
+In this instance `PUID=1000` and `PGID=1000`, to find yours use `id your_user` as below:
+
+```bash
+id your_user
+```
+
+Example output:
+
+```text
+uid=1000(your_user) gid=1000(your_user) groups=1000(your_user)
+```
 
 ## Docker Mods
 
@@ -255,6 +282,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **30.06.24:** - Rebase to Alpine 3.20.
 * **23.12.23:** - Rebase to Alpine 3.19.
 * **20.06.23:** - Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`.
 * **25.05.23:** - Rebase to Alpine 3.18, deprecate armhf.
