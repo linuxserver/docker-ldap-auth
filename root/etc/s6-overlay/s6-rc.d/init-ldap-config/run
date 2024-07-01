@@ -3,7 +3,7 @@
 
 # generate fernet key for ldap if it doesn't exist
 if grep -q 'REPLACEWITHFERNETKEY' /app/ldap-backend-app.py; then
-    if [ -z "${FERNETKEY}" ]; then
+    if [[ -z "${FERNETKEY}" ]]; then
         KEY=$(python3 /app/fernet-key.py)
         echo "generated fernet key"
     elif ! python3 -c "from cryptography.fernet import Fernet; Fernet(b'${FERNETKEY}').encrypt(b'my deep dark secret')" 2>/dev/null; then
