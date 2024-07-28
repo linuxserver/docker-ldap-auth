@@ -3,7 +3,7 @@ Simple Launcher         1.1.0.14               dotnet  (+5 duplicates)
 alpine-baselayout       3.6.5-r0               apk                      
 alpine-baselayout-data  3.6.5-r0               apk                      
 alpine-keys             2.4-r1                 apk                      
-alpine-release          3.20.1-r0              apk                      
+alpine-release          3.20.2-r0              apk                      
 apk-tools               2.14.4-r0              apk                      
 bash                    5.2.26-r0              apk                      
 brotli-libs             1.1.0-r2               apk                      
@@ -19,7 +19,7 @@ coreutils-env           9.5-r1                 apk
 coreutils-fmt           9.5-r1                 apk                      
 coreutils-sha512sum     9.5-r1                 apk                      
 cryptography            43.0.0                 python                   
-curl                    8.8.0-r0               apk                      
+curl                    8.9.0-r0               apk                      
 findutils               4.9.0-r5               apk                      
 gdbm                    1.23-r1                apk                      
 jq                      1.7.1-r0               apk                      
@@ -28,7 +28,7 @@ libattr                 2.5.2-r0               apk
 libbsd                  0.12.2-r0              apk                      
 libbz2                  1.0.8-r6               apk                      
 libcrypto3              3.3.1-r3               apk                      
-libcurl                 8.8.0-r0               apk                      
+libcurl                 8.9.0-r0               apk                      
 libexpat                2.6.2-r0               apk                      
 libffi                  3.4.6-r0               apk                      
 libgcc                  13.2.1_git20240309-r0  apk                      
