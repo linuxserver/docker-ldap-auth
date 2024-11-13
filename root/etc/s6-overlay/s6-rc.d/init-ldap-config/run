@@ -33,7 +33,7 @@ if grep -q 'REPLACEWITHFERNETKEY' /app/ldap-backend-app.py; then
     fi
     # Second, check for a cached key
     if [[ -z ${key} && -f ${KEY_FILE} ]]; then
-	_key="$(normalize_key $(cat "${KEY_FILE}"))"
+	_key=$(normalize_key $(cat "${KEY_FILE}"))
 	if test_key "${_key}"; then
 	    echo "using key from ${KEY_FILE}"
 	    key="${_key}"
