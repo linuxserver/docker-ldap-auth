@@ -1,20 +1,53 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+KEY_FILE=/config/fernet.key
+
+normalize_key () {
+    if [[ -z ${1} || ${1} =~ ^b\'.*\'$ ]]; then
+	echo "${1}"
+    else
+	echo "b'${1}'"
+    fi
+}
+
+test_key () {
+    if [[ -z ${1} ]]; then
+	return 1
+    fi
+    python3 -c "from cryptography.fernet import Fernet; Fernet(${1}).encrypt(b'my deep dark secret')" 2>/dev/null
+}
+
 # generate fernet key for ldap if it doesn't exist
 if grep -q 'REPLACEWITHFERNETKEY' /app/ldap-backend-app.py; then
-    if [[ -z "${FERNETKEY}" ]]; then
-        KEY=$(python3 /app/fernet-key.py)
-        echo "generated fernet key"
-    elif ! python3 -c "from cryptography.fernet import Fernet; Fernet(b'${FERNETKEY}').encrypt(b'my deep dark secret')" 2>/dev/null; then
-        echo "FERNETKEY env var is not set to a base64 encoded 32-byte key"
-        KEY=$(python3 /app/fernet-key.py)
-        echo "generated fernet key"
-    else
-        KEY="b'${FERNETKEY}'"
-        echo "using FERNETKEY from env variable"
+    key=
+    # First check environment variable
+    if [[ -n ${FERNETKEY} ]]; then
+	_key=$(normalize_key "${FERNETKEY}")
+	if test_key "${_key}"; then
+	    key="${_key}"
+            echo "using FERNETKEY from env variable"
+	else
+            echo "FERNETKEY env var is not set to a base64 encoded 32-byte key"
+	fi
+    fi
+    # Second, check for a cached key
+    if [[ -z ${key} && -f ${KEY_FILE} ]]; then
+	_key="$(normalize_key $(cat "${KEY_FILE}"))"
+	if test_key "${_key}"; then
+	    echo "using key from ${KEY_FILE}"
+	    key="${_key}"
+	else
+            echo "${KEY_FILE} does not contain a base64 encoded 32-byte key"
+	fi
+    fi
+    # Finally generate (and save) a new one
+    if [[ -z ${key} ]]; then
+        key=$(python3 /app/fernet-key.py)
+	echo "${key}" > ${KEY_FILE}
+        echo "generated and saved new key"
     fi
 
-    sed -i "s/REPLACEWITHFERNETKEY/${KEY}/" /app/ldap-backend-app.py
-    sed -i "s/REPLACEWITHFERNETKEY/${KEY}/" /app/nginx-ldap-auth-daemon.py
+    sed -i "s/REPLACEWITHFERNETKEY/${key}/" /app/ldap-backend-app.py
+    sed -i "s/REPLACEWITHFERNETKEY/${key}/" /app/nginx-ldap-auth-daemon.py
 fi

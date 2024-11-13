@@ -15,6 +15,9 @@ available_architectures:
 # container parameters
 param_usage_include_ports: true
 param_container_name: "{{ project_name }}"
+opt_param_usage_include_vols: true
+opt_param_volumes:
+  - { vol_path: "/config", vol_host_path: "</path/to/appdata/config>", desc: "Persistent cache for the fernet key" }
 param_ports:
   - { external_port: "8888", internal_port: "8888", port_desc: "the port for ldap auth daemon" }
   - { external_port: "9000", internal_port: "9000", port_desc: "the port for ldap login page" }
@@ -22,7 +25,7 @@ param_ports:
 # optional container parameters
 opt_param_usage_include_env: true
 opt_param_env_vars:
-  - { env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom valid fernet key (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications)" }
+  - { env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom valid fernet key (only needed if the /config volume is not mounted, or if using multi-node setups, invalidating previous authentications)" }
   - { env_var: "CERTFILE", env_value: "", desc: "Optionally point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon" }
   - { env_var: "KEYFILE", env_value: "", desc: "Optionally point this to the private key file, matching the certificate file referred to in CERTFILE" }
 
@@ -33,9 +36,11 @@ app_setup_block: |
   - Here's a sample config: [nginx-ldap-auth.conf](https://github.com/nginxinc/nginx-ldap-auth/blob/master/nginx-ldap-auth.conf).
   - Unlike the upstream project, this image encodes the cookie information with fernet, using a randomly generated key during container creation (or optionally user defined).
   - Also unlike the upstream project, this image serves the login page at `/ldaplogin` (as well as `/login`) to prevent clashes with reverse proxied apps that may also use `/login` for their internal auth.
+  - If the `config` volume is specified, it will be used the cache the generated fernet key across restarts.
 
 # changelog
 changelogs:
+  - { date: "12.11.24:", desc: "Cache the generated fernet key in /config"}
   - { date: "30.06.24:", desc: "Rebase to Alpine 3.20."}
   - { date: "23.12.23:", desc: "Rebase to Alpine 3.19."}
   - { date: "20.06.23:", desc: "Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`." }
