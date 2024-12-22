@@ -137,7 +137,7 @@ class AppHandler(BaseHTTPRequestHandler):
 
             self.send_response(302)
 
-            cipher_suite = Fernet(REPLACEWITHFERNETKEY)
+            cipher_suite = Fernet(os.getenv("FERNET_KEY"))
             enc = cipher_suite.encrypt(ensure_bytes(user + ':' + passwd))
             enc = enc.decode()
             self.send_header('Set-Cookie', 'nginxauth=' + enc + '; httponly')
