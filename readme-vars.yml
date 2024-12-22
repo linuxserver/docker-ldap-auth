@@ -22,6 +22,8 @@ opt_param_env_vars:
   - {env_var: "FERNETKEY", env_value: "", desc: "Optionally define a custom valid fernet key (only needed if container is frequently recreated, or if using multi-node setups, invalidating previous authentications)"}
   - {env_var: "CERTFILE", env_value: "", desc: "Optionally point this to a certificate file to enable HTTP over SSL (HTTPS) for the ldap auth daemon"}
   - {env_var: "KEYFILE", env_value: "", desc: "Optionally point this to the private key file, matching the certificate file referred to in CERTFILE"}
+readonly_supported: true
+nonroot_supported: true
 # application setup block
 app_setup_block_enabled: true
 app_setup_block: |
@@ -76,6 +78,7 @@ init_diagram: |
   "ldap-auth:latest" <- Base Images
 # changelog
 changelogs:
+  - {date: "22.12.24:", desc: "Rebase to Alpine 3.21. Add support for read-only and non-root."}
   - {date: "30.06.24:", desc: "Rebase to Alpine 3.20."}
   - {date: "23.12.23:", desc: "Rebase to Alpine 3.19."}
   - {date: "20.06.23:", desc: "Sync upstream changes, including the ability to disable referrals with `X-Ldap-DisableReferrals`."}

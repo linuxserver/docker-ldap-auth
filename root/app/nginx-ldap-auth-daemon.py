@@ -85,7 +85,7 @@ class AuthHandler(BaseHTTPRequestHandler):
         ctx['action'] = 'decoding credentials'
 
         try:
-            cipher_suite = Fernet(REPLACEWITHFERNETKEY)
+            cipher_suite = Fernet(os.getenv("FERNET_KEY"))
             self.log_message('Trying to dechipher credentials...')
             auth_decoded = auth_header[6:].encode()
             auth_decoded = cipher_suite.decrypt(auth_decoded)
