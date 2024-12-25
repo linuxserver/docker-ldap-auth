@@ -11,7 +11,7 @@ if [[ ! -f "/run/.fernetkey" ]]; then
         KEY=$(python3 /app/fernet-key.py)
         echo "generated fernet key"
     else
-        KEY="b'${FERNETKEY}'"
+        KEY="${FERNETKEY}"
         echo "using FERNETKEY from env variable"
     fi
     echo "${KEY}" > /run/.fernetkey
