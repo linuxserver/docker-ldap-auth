@@ -94,9 +94,15 @@ class AuthHandler(BaseHTTPRequestHandler):
             user, passwd = auth_decoded.split(':', 1)
         except InvalidToken:
             self.log_message('Incorrect token. Trying to decode credentials from BASE64...')
-            auth_decoded = base64.b64decode(auth_header[6:])
-            auth_decoded = auth_decoded.decode("utf-8")
-            user, passwd = auth_decoded.split(':', 1)
+            # Wrapping below in try-except block to catch failed decoding due to expired cookie
+            try:
+                auth_decoded = base64.b64decode(auth_header[6:])
+                auth_decoded = auth_decoded.decode("utf-8")
+                user, passwd = auth_decoded.split(':', 1)
+            except Exception as e:
+                self.auth_failed(ctx)
+                self.log_error(e)
+                return True
         except Exception as e:
             self.auth_failed(ctx)
             self.log_error(e)
@@ -217,7 +223,7 @@ class LDAPAuthHandler(AuthHandler):
                 return
 
             ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
-            
+
             ctx['action'] = 'initializing LDAP connection'
             ldap_obj = ldap.initialize(ctx['url']);
 
@@ -254,7 +260,7 @@ class LDAPAuthHandler(AuthHandler):
                                           searchfilter, ['objectclass'], 1)
 
             ctx['action'] = 'verifying search query results'
-            
+
             nres = len(results)
 
             if nres < 1:
@@ -363,4 +369,3 @@ if __name__ == '__main__':
     sys.stdout.write("Start listening on %s:%d...\n" % Listen)
     sys.stdout.flush()
     server.serve_forever()
-
