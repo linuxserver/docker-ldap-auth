@@ -9,7 +9,7 @@
 # 1) accepts GET  requests on /login and /ldaplogin and responds with a login form
 # 2) accepts POST requests on /login and /ldaplogin, sets a cookie, and responds with redirect
 
-import sys, os, signal, base64, cgi
+import sys, os, signal, base64, cgi, datetime
 if sys.version_info.major == 2:
     from urlparse import urlparse
     from Cookie import BaseCookie
@@ -141,7 +141,9 @@ class AppHandler(BaseHTTPRequestHandler):
             cipher_suite = Fernet(fernetkey)
             enc = cipher_suite.encrypt(ensure_bytes(user + ':' + passwd))
             enc = enc.decode()
-            self.send_header('Set-Cookie', 'nginxauth=' + enc + '; httponly')
+            expires = datetime.datetime.now(datetime.UTC) + datetime.timedelta(weeks=1)
+            expires_str = expires.strftime('%a, %d-%b-%Y %H:%M:%S GMT')
+            self.send_header('Set-Cookie', 'nginxauth=' + enc + f'; Expires={expires_str}; httponly')
 
             self.send_header('Location', target)
             self.end_headers()
