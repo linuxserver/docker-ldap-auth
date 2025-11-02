@@ -24,7 +24,7 @@ curl                    8.14.1-r2         apk
 findutils               4.10.0-r0         apk                      
 gdbm                    1.24-r0           apk                      
 jq                      1.7.1-r0          apk                      
-legacy-cgi              2.6.3             python                   
+legacy-cgi              2.6.4             python                   
 libattr                 2.5.2-r2          apk                      
 libbsd                  0.12.2-r0         apk                      
 libbz2                  1.0.8-r6          apk                      
