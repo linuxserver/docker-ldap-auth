@@ -82,24 +82,19 @@ class AuthHandler(BaseHTTPRequestHandler):
 
             return True
 
-        ctx['action'] = 'decoding credentials'
+        ctx['action'] = 'decoding credentials with fernet key'
 
-        try:
-            fernetkey = os.getenv("FERNET_KEY").encode()
-            cipher_suite = Fernet(fernetkey)
-            self.log_message('Trying to dechipher credentials...')
-            auth_decoded = auth_header[6:].encode()
-            auth_decoded = cipher_suite.decrypt(auth_decoded)
-            auth_decoded = auth_decoded.decode("utf-8")
-            user, passwd = auth_decoded.split(':', 1)
-        except InvalidToken:
-            self.log_message('Incorrect token. Trying to decode credentials from BASE64...')
-            auth_decoded = base64.b64decode(auth_header[6:])
-            auth_decoded = auth_decoded.decode("utf-8")
-            user, passwd = auth_decoded.split(':', 1)
-        except Exception as e:
-            self.auth_failed(ctx)
-            self.log_error(e)
+        user: str | None
+        passwd: str | None
+        error: str | None
+        user, passwd, error = self.decode_credentials_with_fernet_key(ctx, auth_header)
+
+        if error == "InvalidToken":
+            self.log_message('Incorrect token.')
+            ctx['action'] = 'decoding credentials with base64'
+            user, passwd = self.decode_credentials_with_base64(ctx, auth_header)
+
+        if user is None and passwd is None:
             return True
 
         ctx['user'] = ldap.filter.escape_filter_chars(user)
@@ -107,6 +102,49 @@ class AuthHandler(BaseHTTPRequestHandler):
 
         # Continue request processing
         return False
+
+
+    def decode_credentials_with_fernet_key(
+        self,
+        ctx: dict,
+        auth_header: str
+    ) -> tuple[str, str, str]:
+        user: str | None = None
+        passwd: str | None = None
+        error: str | None = None
+        try:
+            fernetkey = os.getenv("FERNET_KEY").encode()
+            cipher_suite = Fernet(fernetkey)
+            self.log_message('Trying to dechipher credentials with Fernet Key...')
+            auth_decoded = auth_header[6:].encode()
+            auth_decoded = cipher_suite.decrypt(auth_decoded)
+            auth_decoded = auth_decoded.decode("utf-8")
+            user, passwd = auth_decoded.split(':', 1)
+        except (InvalidToken, TypeError, UnicodeDecodeError):
+            error = "InvalidToken"
+        except Exception as e:
+            self.auth_failed(ctx)
+            self.log_error(str(e))
+        return user, passwd, error
+
+
+    def decode_credentials_with_base64(
+        self,
+        ctx: dict,
+        auth_header: str
+    ) -> tuple[str, str]:
+        user: str | None = None
+        passwd: str | None = None
+        try:
+            self.log_message('Trying to decode credentials from BASE64...')
+            auth_decoded = base64.b64decode(auth_header[6:])
+            auth_decoded = auth_decoded.decode("utf-8")
+            user, passwd = auth_decoded.split(':', 1)
+        except Exception as e:
+            self.auth_failed(ctx)
+            self.log_error(str(e))
+        return user, passwd
+
 
     def get_cookie(self, name):
         cookies = self.headers.get('Cookie')
@@ -217,7 +255,7 @@ class LDAPAuthHandler(AuthHandler):
                 return
 
             ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
-            
+
             ctx['action'] = 'initializing LDAP connection'
             ldap_obj = ldap.initialize(ctx['url']);
 
@@ -254,7 +292,7 @@ class LDAPAuthHandler(AuthHandler):
                                           searchfilter, ['objectclass'], 1)
 
             ctx['action'] = 'verifying search query results'
-            
+
             nres = len(results)
 
             if nres < 1:
@@ -363,4 +401,3 @@ if __name__ == '__main__':
     sys.stdout.write("Start listening on %s:%d...\n" % Listen)
     sys.stdout.flush()
     server.serve_forever()
-
