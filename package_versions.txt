@@ -30,7 +30,7 @@ libbsd                  0.12.2-r0         apk
 libbz2                  1.0.8-r6          apk                      
 libcrypto3              3.3.6-r0          apk                      
 libcurl                 8.14.1-r2         apk                      
-libexpat                2.7.4-r0          apk                      
+libexpat                2.7.5-r0          apk                      
 libffi                  3.4.7-r0          apk                      
 libgcc                  14.2.0-r4         apk                      
 libidn2                 2.3.7-r0          apk                      
@@ -56,7 +56,7 @@ oniguruma               6.9.9-r0          apk
 packaging               26.0              python                   
 pip                     26.0.1            python                   
 procps-ng               4.0.4-r2          apk                      
-pyasn1                  0.6.2             python                   
+pyasn1                  0.6.3             python                   
 pyasn1-modules          0.4.2             python                   
 pyc                     3.12.12-r0        apk                      
 pycparser               3.0               python                   
