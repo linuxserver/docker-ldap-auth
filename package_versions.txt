@@ -54,7 +54,7 @@ netcat-openbsd          1.226.1.1-r0      apk
 nghttp2-libs            1.64.0-r0         apk                      
 oniguruma               6.9.9-r0          apk                      
 packaging               26.2              python                   
-pip                     26.0.1            python                   
+pip                     26.1              python                   
 procps-ng               4.0.4-r2          apk                      
 pyasn1                  0.6.3             python                   
 pyasn1-modules          0.4.2             python                   
@@ -70,9 +70,9 @@ shadow                  4.16.0-r1         apk
 skalibs-libs            2.14.3.0-r0       apk                      
 sqlite-libs             3.48.0-r4         apk                      
 ssl_client              1.37.0-r14        apk                      
-tzdata                  2026a-r0          apk                      
+tzdata                  2026b-r0          apk                      
 utmps-libs              0.1.2.3-r2        apk                      
 wheel                   0.47.0            python                   
-xz-libs                 5.6.3-r1          apk                      
+xz-libs                 5.8.3-r0          apk                      
 zlib                    1.3.2-r0          apk                      
 zstd-libs               1.5.6-r2          apk                      
