@@ -19,7 +19,7 @@ coreutils               9.5-r2            apk
 coreutils-env           9.5-r2            apk                      
 coreutils-fmt           9.5-r2            apk                      
 coreutils-sha512sum     9.5-r2            apk                      
-cryptography            47.0.0            python                   
+cryptography            48.0.0            python                   
 curl                    8.14.1-r2         apk                      
 findutils               4.10.0-r0         apk                      
 gdbm                    1.24-r0           apk                      
@@ -51,10 +51,10 @@ musl                    1.2.5-r11         apk
 musl-utils              1.2.5-r11         apk                      
 ncurses-terminfo-base   6.5_p20241006-r3  apk                      
 netcat-openbsd          1.226.1.1-r0      apk                      
-nghttp2-libs            1.64.0-r0         apk                      
+nghttp2-libs            1.69.0-r0         apk                      
 oniguruma               6.9.9-r0          apk                      
 packaging               26.2              python                   
-pip                     26.1              python                   
+pip                     26.1.1            python                   
 procps-ng               4.0.4-r2          apk                      
 pyasn1                  0.6.3             python                   
 pyasn1-modules          0.4.2             python                   
