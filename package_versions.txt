@@ -10,11 +10,11 @@ bash                    5.2.37-r0         apk
 brotli-libs             1.1.0-r2          apk                      
 busybox                 1.37.0-r14        apk                      
 busybox-binsh           1.37.0-r14        apk                      
-c-ares                  1.34.6-r0         apk                      
+c-ares                  1.34.8-r0         apk                      
 ca-certificates         20260413-r0       apk                      
 ca-certificates-bundle  20260413-r0       apk                      
 catatonit               0.2.0-r0          apk                      
-cffi                    2.0.0             python                   
+cffi                    2.1.0             python                   
 coreutils               9.5-r2            apk                      
 coreutils-env           9.5-r2            apk                      
 coreutils-fmt           9.5-r2            apk                      
@@ -56,7 +56,7 @@ oniguruma               6.9.9-r0          apk
 packaging               26.2              python                   
 pip                     26.1.2            python                   
 procps-ng               4.0.4-r2          apk                      
-pyasn1                  0.6.3             python                   
+pyasn1                  0.6.4             python                   
 pyasn1-modules          0.4.2             python                   
 pyc                     3.12.13-r0        apk                      
 pycparser               3.0               python                   
