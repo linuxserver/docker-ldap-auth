@@ -72,7 +72,7 @@ init_diagram: |
     svc-ldap-daemon -> legacy-services
   }
   Base Images: {
-    "baseimage-alpine:3.21"
+    "baseimage-alpine:3.24"
   }
   "ldap-auth:latest" <- Base Images
 # changelog
