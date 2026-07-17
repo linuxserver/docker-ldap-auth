@@ -293,6 +293,7 @@ Once registered you can define the dockerfile to use with `-f Dockerfile.aarch64
 
 ## Versions
 
+* **17.07.26:** - Rebase to Alpine 3.24.
 * **25.12.24:** - Add `legacy-cgi`. Fix fernet key storage.
 * **22.12.24:** - Rebase to Alpine 3.21. Add support for read-only and non-root.
 * **30.06.24:** - Rebase to Alpine 3.20.
