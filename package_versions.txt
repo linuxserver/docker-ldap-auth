@@ -14,7 +14,7 @@ c-ares                  1.34.8-r0         apk
 ca-certificates         20260611-r0       apk                      
 ca-certificates-bundle  20260611-r0       apk                      
 catatonit               0.2.1-r0          apk                      
-cffi                    2.1.0             python                   
+cffi                    2.1.1             python                   
 coreutils               9.11-r0           apk                      
 coreutils-env           9.11-r0           apk                      
 coreutils-fmt           9.11-r0           apk                      
@@ -54,8 +54,8 @@ ncurses-terminfo-base   6.6_p20260516-r0  apk
 netcat-openbsd          1.234.1-r0        apk                      
 nghttp2-libs            1.69.0-r0         apk                      
 oniguruma               6.9.10-r0         apk                      
-packaging               26.2              python                   
-pip                     26.2              python                   
+packaging               26.3              python                   
+pip                     26.2.1            python                   
 procps-ng               4.0.6-r0          apk                      
 pyasn1                  0.6.4             python                   
 pyasn1-modules          0.4.2             python                   
