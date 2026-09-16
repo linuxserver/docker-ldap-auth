@@ -61,7 +61,7 @@ pyasn1                  0.6.4             python
 pyasn1-modules          0.4.2             python                   
 pyc                     3.14.7-r1         apk                      
 pycparser               3.0               python                   
-python-ldap             3.4.7             python                   
+python-ldap             3.4.8             python                   
 python3                 3.14.7-r1         apk                      
 python3-pyc             3.14.7-r1         apk                      
 python3-pycache-pyc0    3.14.7-r1         apk                      
